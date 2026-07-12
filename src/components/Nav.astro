@@ -1,0 +1,35 @@
+<header class="nav">
+  <div class="container nav-inner">
+    <a href="/" class="brand">robium</a>
+    <nav class="links">
+      <a href="#how">How it works</a>
+      <a href="#skills">Skills</a>
+      <a href="#apps">Apps</a>
+    </nav>
+    <div class="actions">
+      <a href="https://github.com/jazarium/robium-docs" aria-label="GitHub" class="gh">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.93c.58.1.79-.25.79-.56v-2.17c-3.2.7-3.87-1.37-3.87-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.05.78 2.13v3.16c0 .31.2.67.8.55A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg>
+      </a>
+      <a href="#get-started" class="btn btn-primary">Get Started</a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner { display: flex; align-items: center; gap: 32px; height: 64px; }
+  .brand { font-weight: 700; font-size: 20px; color: var(--text); text-decoration: none; letter-spacing: -0.01em; }
+  .links { display: flex; gap: 24px; flex: 1; }
+  .links a { color: var(--text2); text-decoration: none; font-size: 15px; transition: color 150ms; }
+  .links a:hover { color: var(--text); }
+  .actions { display: flex; align-items: center; gap: 16px; }
+  .gh { color: var(--text2); display: flex; transition: color 150ms; }
+  .gh:hover { color: var(--text); }
+  .actions .btn { height: 38px; padding: 0 16px; font-size: 15px; }
+  @media (max-width: 800px) { .links { display: none; } }
+</style>
