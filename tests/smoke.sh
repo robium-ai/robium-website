@@ -23,6 +23,14 @@ check "plugin marketplace add jazarium/robium-docs" "install command"
 check "pusht-eval.mp4" "proof video"
 check "Hugging Face" "marquee"
 
+if [[ -z "$URL" ]]; then
+  DEMO=$(cat dist/demos/nav-trial/index.html)
+  grep -q "app.foxglove.dev" <<<"$DEMO" && echo "ok: demo deep link" || { echo "FAIL: demo deep link"; fail=1; }
+  grep -q "demo-nav-trial-902570464351" <<<"$DEMO" && echo "ok: demo wss url" || { echo "FAIL: demo wss url"; fail=1; }
+  [[ -f dist/demos/nav-trial-layout.json ]] && echo "ok: demo layout file" || { echo "FAIL: demo layout file"; fail=1; }
+  grep -q "/demos/nav-trial" dist/index.html && echo "ok: homepage demo link" || { echo "FAIL: homepage demo link"; fail=1; }
+fi
+
 tiles=$(grep -o 'class="card skill"' <<<"$HTML" | wc -l | tr -d ' ')
 if [[ "$tiles" -ge 20 ]]; then echo "ok: $tiles skill tiles"; else echo "FAIL: only $tiles skill tiles"; fail=1; fi
 

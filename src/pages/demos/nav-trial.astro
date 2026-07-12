@@ -1,0 +1,107 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import Terminal from '../../components/Terminal.astro';
+
+const WS_URL = 'wss://demo-nav-trial-902570464351.us-central1.run.app';
+const FOXGLOVE_URL =
+  `https://app.foxglove.dev/~/view?ds=foxglove-websocket&ds.url=${encodeURIComponent(WS_URL)}`;
+---
+<Base title="nav-trial live demo — robium">
+  <div class="glow-field"></div>
+  <Nav />
+  <main>
+    <section class="demo-hero">
+      <div class="container narrow">
+        <span class="badge">Live demo</span>
+        <h1>Drive a robot. <span class="gradient-text">Right now.</span></h1>
+        <p class="sub">
+          A TurtleBot 3 running SLAM-built-map navigation (ROS 2 Jazzy + Nav2 +
+          Gazebo, fully headless) boots privately for you on Cloud Run. You
+          drive it from Foxglove by clicking navigation goals on its map.
+        </p>
+      </div>
+    </section>
+
+    <section class="steps-sec">
+      <div class="container narrow">
+        <span class="label">Start your session</span>
+        <ol class="steps">
+          <li>
+            <strong>Download the layout</strong> (one-time):
+            <a href="/demos/nav-trial-layout.json" download class="btn btn-secondary">nav-trial-layout.json</a>
+          </li>
+          <li>
+            <strong>Open your private robot in Foxglove</strong> (free account
+            required — it's the standard robotics viewer):
+            <a href={FOXGLOVE_URL} target="_blank" rel="noopener" class="btn btn-primary">Open in Foxglove →</a>
+          </li>
+          <li>
+            <strong>Import the layout</strong> in Foxglove (Layout menu →
+            Import from file…), wait for the map to appear, then use the
+            <em>Publish</em> tool in the 3D panel to click a goal — the robot
+            plans a path and drives there.
+          </li>
+        </ol>
+        <div class="card expect">
+          <span class="label">What to expect</span>
+          <ul>
+            <li><strong>~30–60 s boot</strong> — your simulator starts from cold (that's what keeps it free to offer); panels fill in as the stack comes up.</li>
+            <li><strong>Your own robot</strong> — every session is a private instance; nobody else is steering it.</li>
+            <li><strong>30-minute sessions</strong> — the sim shuts down when you disconnect or at the cap; reconnect for a fresh robot.</li>
+            <li><strong>Busy?</strong> Max 5 simultaneous sessions — if the connection fails, try again in a few minutes.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="repro-sec">
+      <div class="container narrow">
+        <span class="label">How this demo was built</span>
+        <h2>One brief. One plugin. This repo.</h2>
+        <p class="sub">
+          Everything you're driving was built by Claude Code with the robium
+          plugin, from this brief (verbatim from the
+          <a href="https://github.com/jazarium/robium-applications">robium-applications</a>
+          proving ground):
+        </p>
+        <Terminal title="the brief that produced nav-trial">
+<span class="tp">Autonomous mobile-robot navigation in simulation</span>
+(expected: ROS 2 + Nav2 + Gazebo, dockerized, live viz)
+
+<span class="ta">pass bar:</span> robot navigates to goals in sim;
+smoke test passes; skills visibly drove the stack decisions
+</Terminal>
+        <p class="sub">
+          The agent chose the stack, wrote the architecture brief, built the
+          Docker environment, ran SLAM to produce the very map you're clicking
+          on, tuned Nav2 around real gotchas, and gated it all behind a smoke
+          test. Reproduce it: install the plugin and hand your agent a brief.
+        </p>
+        <a href="/#get-started" class="btn btn-primary">Get the plugin →</a>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  .narrow { max-width: 760px; }
+  .demo-hero { padding: 90px 0 40px; }
+  .badge {
+    display: inline-block; padding: 6px 14px; border-radius: 999px;
+    border: 1px solid var(--border); background: var(--bg2);
+    font-size: 13px; color: var(--text2); margin-bottom: 24px;
+  }
+  .sub { color: var(--text2); margin-top: 20px; }
+  .sub a { color: var(--accent2); }
+  .steps-sec { padding: 40px 0; }
+  .steps { display: grid; gap: 20px; margin: 24px 0 32px; padding-left: 20px; }
+  .steps li { color: var(--text2); }
+  .steps .btn { margin-left: 12px; height: 38px; padding: 0 16px; font-size: 15px; }
+  .expect ul { margin: 12px 0 0 18px; display: grid; gap: 8px; }
+  .expect li { font-size: 15px; color: var(--text2); }
+  .repro-sec h2 { margin: 12px 0 8px; }
+  .repro-sec .btn { margin-top: 24px; }
+</style>
