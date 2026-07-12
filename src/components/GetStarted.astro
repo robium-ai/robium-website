@@ -1,0 +1,27 @@
+---
+import Terminal from './Terminal.astro';
+---
+<section id="get-started">
+  <div class="container narrow">
+    <span class="label">Get started</span>
+    <h2>Two commands in Claude Code.</h2>
+    <Terminal title="claude">
+<span class="tp">/plugin marketplace add jazarium/robium-docs</span>
+<span class="tp">/plugin install robium@robium</span>
+
+<span class="ts">✓</span> 20 robotics skills loaded — start with:
+<span class="ta">&gt; build a mobile robot that navigates in sim</span>
+</Terminal>
+    <p class="after">
+      Then just describe your robot application. Full docs in the
+      <a href="https://github.com/jazarium/robium-docs#readme">README</a>.
+    </p>
+  </div>
+</section>
+
+<style>
+  .narrow { max-width: 720px; }
+  h2 { margin: 12px 0 32px; }
+  .after { margin-top: 24px; color: var(--text2); font-size: 15px; }
+  .after a { color: var(--accent2); }
+</style>
