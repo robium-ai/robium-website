@@ -1,0 +1,60 @@
+---
+const steps = [
+  {
+    n: '01',
+    title: 'Describe the robot app',
+    body: '"Autonomous navigation in sim" or "train a manipulation policy" — plain language, in your Claude Code session.',
+    art: '> build a mobile robot that\n  navigates a warehouse',
+  },
+  {
+    n: '02',
+    title: 'Skills route the stack',
+    body: 'The architect skill turns requirements into a verified stack decision and writes an architecture brief your whole build follows.',
+    art: 'middleware  ROS 2 Jazzy\nnav         Nav2\nsim         Gazebo Harmonic\nviz         Foxglove',
+  },
+  {
+    n: '03',
+    title: 'Build and see it run',
+    body: 'Reproducible envs (uv or Docker), headless simulation, browser visualization — local and remote runs behave identically.',
+    art: 'gz sim -s --headless-rendering\nfoxglove ws://localhost:8765\nRTF ≈ 0.99',
+  },
+  {
+    n: '04',
+    title: 'Smoke test gates done',
+    body: 'An app is not done until one command proves it: robot reaches its goals, policy trains and evals with metrics. Exit code 0 or it is not shipped.',
+    art: '$ make smoke\nPASS: all goals reached\nexit 0',
+  },
+];
+---
+<section id="how">
+  <div class="container">
+    <span class="label">How it works</span>
+    <h2>From idea to a smoke-tested robot app.</h2>
+    <div class="steps">
+      {steps.map((s) => (
+        <div class="card step">
+          <span class="n gradient-text">{s.n}</span>
+          <h3>{s.title}</h3>
+          <p>{s.body}</p>
+          <pre class="art">{s.art}</pre>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  h2 { margin: 12px 0 48px; }
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .step h3 { font-size: 19px; margin: 12px 0 8px; }
+  .step p { font-size: 15px; color: var(--text2); }
+  .n { font-size: 14px; font-weight: 700; font-family: ui-monospace, Menlo, monospace; }
+  .art {
+    margin-top: 16px; padding: 14px; border-radius: 10px;
+    background: var(--bg2); border: 1px solid var(--border);
+    font-family: ui-monospace, Menlo, monospace; font-size: 12.5px;
+    line-height: 1.6; color: var(--text2); overflow-x: auto;
+  }
+  @media (max-width: 1000px) { .steps { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .steps { grid-template-columns: 1fr; } }
+</style>
