@@ -1,0 +1,102 @@
+[
+  {
+    "name": "architect",
+    "description": "Entry-point skill for designing robotics applications with AI agents. Turns requirements (robot type, task, hardware, sim-vs-real, GPU/budget) into a full stack decision — middleware, simulation, data, visualization, training frameworks — plus a scaffold plan and a written architecture brief.",
+    "version": "1.1.1"
+  },
+  {
+    "name": "data",
+    "description": "Data sourcing strategy for robotics and physical-AI: choose between offline datasets (HuggingFace hub, Open X-Embodiment and similar), simulation-generated data, and teleop/real-robot collection; plan storage formats, episode structure, and dataset versioning.",
+    "version": "1.0.0"
+  },
+  {
+    "name": "environments",
+    "description": "Virtual-environment-first setup for robotics projects: decide uv/venv vs Docker, make local and remote-server runs reproduce identically, handle GPU passthrough and headless/display forwarding.",
+    "version": "1.1.1"
+  },
+  {
+    "name": "foxglove",
+    "description": "Foxglove for robotics visualization: foxglove_bridge setup for live ROS 2 robots, layouts, MCAP recording and playback, and remote/web visualization of robots running on servers.",
+    "version": "1.1.2"
+  },
+  {
+    "name": "gazebo",
+    "description": "Modern Gazebo (gz — Harmonic/Ionic line) simulation: SDF worlds and models, sensors (lidar, camera, IMU, contact), the ros_gz bridge, spawning robots, and headless/server operation.",
+    "version": "1.1.1"
+  },
+  {
+    "name": "huggingface",
+    "description": "HuggingFace ecosystem for robotics projects: hub datasets and models for robot learning, and demo Spaces. DELEGATES: for hub mechanics (download/upload/auth/jobs), install HuggingFace's own skills — /plugin marketplace add huggingface/skills, then /plugin install hf-cli@huggingface-skills — and defer to them; this skill adds only the robotics-specific layer (which datasets and models matter for manipulation and navigation, robotics dataset conventions on the hub).",
+    "version": "1.0.1"
+  },
+  {
+    "name": "integration",
+    "description": "Glue robotics modules into one running system: choose module boundaries, pick inter-module communication (ROS 2 topics/services/actions, zenoh, gRPC, REST, shared memory), and write solid Dockerfiles and docker-compose for robotics workloads.",
+    "version": "1.1.0"
+  },
+  {
+    "name": "isaac-lab",
+    "description": "NVIDIA Isaac Lab: reinforcement-learning and imitation-learning workflows on top of Isaac Sim — prebuilt environments and tasks, training runs, and exporting policies.",
+    "version": "1.0.1"
+  },
+  {
+    "name": "isaac-sim",
+    "description": "NVIDIA Isaac Sim: installation and container setup, GPU/driver requirements, USD scenes, robots and sensors, the ROS 2 bridge, and headless/livestream operation for remote servers.",
+    "version": "1.0.1"
+  },
+  {
+    "name": "lerobot",
+    "description": "HuggingFace LeRobot for physical-AI manipulation: the LeRobotDataset format, loading and recording episodes, training policies (ACT, diffusion, pi0), evaluating in simulation, and teleoperation.",
+    "version": "1.1.1"
+  },
+  {
+    "name": "nav2",
+    "description": "Nav2 mobile-robot navigation for ROS 2: bringup, behavior trees, costmaps, planner/controller servers, localization (AMCL, slam_toolbox), waypoint following, and tuning.",
+    "version": "1.1.1"
+  },
+  {
+    "name": "rerun",
+    "description": "Rerun for data-centric robotics and ML visualization: logging APIs (Python), timelines, entity paths, and viewing policy rollouts, episode data, and sensor streams.",
+    "version": "1.0.1"
+  },
+  {
+    "name": "ros2",
+    "description": "Core ROS 2 usage: workspaces, colcon builds, packages (ament_python/ament_cmake), nodes, topics/services/actions, QoS, launch files, parameters, TF2, rosdep, and gluing third-party packages together.",
+    "version": "1.0.1"
+  },
+  {
+    "name": "rviz2",
+    "description": "RViz2 visualization for ROS 2: displays, TF frame debugging, markers, saved config files, and the common 'nothing shows up' fixes (fixed frame, QoS, sim time).",
+    "version": "1.0.1"
+  },
+  {
+    "name": "simulation",
+    "description": "Choose and set up robotics simulators, and simulate sensors correctly: Gazebo vs Isaac Sim selection, sensor fidelity (rates, noise models, frames matching the real robot), determinism, and sim-to-real considerations.",
+    "version": "1.0.0"
+  },
+  {
+    "name": "skill-author",
+    "description": "Author and improve robium skills. Three modes: fresh authoring from skills/_TEMPLATE, mining skills out of existing repos and apps, and hardening skills from learnings/ notes after trial runs. Enforces the robium quality bar (template compliance, trigger-surface descriptions, <500-line bodies, stated delegation posture, upstream links, no invented syntax) and runs scripts/validate_skills.py.",
+    "version": "1.1.0"
+  },
+  {
+    "name": "skill-refiner",
+    "description": "Curation pass over the robium skill catalog: measure bloat against token budgets, find cross-skill duplication and overlap worth merging, sweep dated version/status facts for staleness, and review which skills never fire so their trigger surface or existence gets questioned.",
+    "version": "1.0.1"
+  },
+  {
+    "name": "skill-updater",
+    "description": "Fold the current session's learnings back into the robium skills, on demand. Harvests gotchas from the conversation and any unabsorbed learnings/ files, confirms the list, then edits the robium source checkout: fixes wrong/stale guidance, widens missed trigger surfaces, adds figured-out-from-scratch knowledge, prunes noise, and promotes ✓-verified examples.",
+    "version": "1.1.1"
+  },
+  {
+    "name": "testing",
+    "description": "Test-driven robotics development: smoke tests for launch files, sim-based regression tests, node-level unit tests, policy eval as a test, and CI patterns for robotics repos.",
+    "version": "1.1.0"
+  },
+  {
+    "name": "visualization",
+    "description": "Choose and apply robotics visualization: selection guidance for rviz2 vs Foxglove vs Rerun, plus best practices — what to visualize at each dev stage, live vs recorded, local vs remote.",
+    "version": "1.0.1"
+  }
+]
