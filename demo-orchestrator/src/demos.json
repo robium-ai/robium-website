@@ -1,0 +1,19 @@
+[
+  {
+    "id": "nav-trial",
+    "title": "TurtleBot 3 autonomous navigation (ROS 2 + Nav2 + Gazebo)",
+    "image": "nav-trial:latest",
+    "command": ["/entrypoint.sh", "ros2", "launch", "nav_trial_bringup", "demo.launch.py"],
+    "gatewayPort": 8765,
+    "readyLog": "DEMO READY",
+    "maxInstances": 3,
+    "sessionSeconds": 1800,
+    "env": {
+      "GZ_RELAY": "127.0.0.1",
+      "GZ_IP": "127.0.0.1",
+      "FASTDDS_BUILTIN_TRANSPORTS": "UDPv4",
+      "ROS_DOMAIN_ID": "42",
+      "TURTLEBOT3_MODEL": "burger"
+    }
+  }
+]
