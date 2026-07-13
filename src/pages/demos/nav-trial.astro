@@ -4,7 +4,7 @@ import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
 import Terminal from '../../components/Terminal.astro';
 
-const DEMO_HOST = 'demo-nav-trial-902570464351.us-central1.run.app';
+const DEMO_HOST = 'demo.robium.org';
 ---
 <Base title="nav-trial live demo — robium">
   <div class="glow-field"></div>
@@ -96,7 +96,7 @@ smoke test passes; skills visibly drove the stack decisions
 
     async function poll() {
       try {
-        const r = await fetch(`${httpBase}/status?session=${session}`);
+        const r = await fetch(`${httpBase}/status?session=${session}`, { credentials: 'include' });
         if (r.status === 409) {
           $('stat').textContent = 'status routed to another instance — your viewer is unaffected';
           return;
@@ -118,7 +118,7 @@ smoke test passes; skills visibly drove the stack decisions
     async function stop() {
       clearInterval(timer);
       try {
-        await fetch(`${httpBase}/shutdown?session=${session}`, { method: 'POST' });
+        await fetch(`${httpBase}/shutdown?session=${session}`, { method: 'POST', credentials: 'include' });
       } catch {}
       $('pill').textContent = 'ended';
       $('stat').textContent = 'session ended — instance stopped';
