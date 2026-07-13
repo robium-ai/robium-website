@@ -9,10 +9,14 @@ import FileTree from './FileTree';
 import './demo.css';
 
 export default function Workspace({ host: hostProp }: { host: string }) {
-  // Dev override: /demos/nav-trial?host=localhost:8765 points the whole UI at
-  // a local demo container (or ?host=demo.robium.org against prod) — lets
-  // `npm run dev` HMR-iterate the frontend without any redeploy.
-  const host = (typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('host')) || hostProp;
+  // Backend selection order: ?host= query param > persisted dev choice > prop.
+  // In dev, a top-bar switcher lets you flip prod ↔ local without editing the
+  // URL; it's hidden on the deployed site so visitors never see it.
+  const [host, setHostState] = useState(() => {
+    if (typeof window === 'undefined') return hostProp;
+    const q = new URLSearchParams(window.location.search).get('host');
+    return q || localStorage.getItem('demoHost') || hostProp;
+  });
   const [session, setSession] = useState<string | null>(null);
   const [st, setSt] = useState<Status | null>(null);
   const [file, setFile] = useState<{ path: string; content: string } | null>(null);
@@ -56,6 +60,13 @@ export default function Workspace({ host: hostProp }: { host: string }) {
     setTab('about');
   }
 
+  function changeHost(h: string) {
+    if (h === host) return;
+    stop();                              // never leak a session across backends
+    localStorage.setItem('demoHost', h);
+    setHostState(h);
+  }
+
   useEffect(() => {
     const onHide = () => { if (sessionRef.current) navigator.sendBeacon(wsShutdownUrl(host, sessionRef.current)); };
     window.addEventListener('pagehide', onHide);
@@ -68,6 +79,15 @@ export default function Workspace({ host: hostProp }: { host: string }) {
         <span className="brand">robium</span>
         <span className="sep">·</span>
         <span>nav-trial live demo</span>
+        {import.meta.env.DEV && (
+          <label className="host-switch" title="Dev only — pick the backend">
+            backend:
+            <select value={host} onChange={(e) => changeHost(e.target.value)}>
+              <option value={hostProp}>{hostProp} (cloud)</option>
+              <option value="localhost:8765">localhost:8765 (local)</option>
+            </select>
+          </label>
+        )}
         <a className="home" href="/">← robium.org</a>
       </div>
       <Group orientation="horizontal" className="ws-panels">
