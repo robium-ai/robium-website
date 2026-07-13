@@ -32,3 +32,6 @@ deploy:
 	gcloud run deploy robium-site --image=$(IMAGE) \
 	  --region=$(REGION) --project=$(PROJECT) --platform=managed \
 	  --allow-unauthenticated --min-instances=0 --max-instances=2 --quiet
+
+orchestrator:
+	cd demo-orchestrator && npm run start
