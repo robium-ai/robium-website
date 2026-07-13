@@ -25,9 +25,11 @@ check "Hugging Face" "marquee"
 
 if [[ -z "$URL" ]]; then
   DEMO=$(cat dist/demos/nav-trial/index.html)
-  grep -q "ds=foxglove-websocket" <<<"$DEMO" && echo "ok: embedded viewer wiring" || { echo "FAIL: embedded viewer wiring"; fail=1; }
+  grep -q "Start instance" <<<"$DEMO" && echo "ok: start button" || { echo "FAIL: start button"; fail=1; }
+  grep -q "app.foxglove.dev" <<<"$DEMO" && echo "ok: foxglove deep link" || { echo "FAIL: foxglove deep link"; fail=1; }
   grep -q "demo.robium.org" <<<"$DEMO" && echo "ok: demo host" || { echo "FAIL: demo host"; fail=1; }
   grep -q "shutdown" <<<"$DEMO" && echo "ok: session controls" || { echo "FAIL: session controls"; fail=1; }
+  grep -q "budget" <<<"$DEMO" && echo "ok: fleet budget" || { echo "FAIL: fleet budget"; fail=1; }
   [[ -f dist/demos/nav-trial-layout.json ]] && echo "ok: demo layout file" || { echo "FAIL: demo layout file"; fail=1; }
   grep -q "/demos/nav-trial" dist/index.html && echo "ok: homepage demo link" || { echo "FAIL: homepage demo link"; fail=1; }
 fi

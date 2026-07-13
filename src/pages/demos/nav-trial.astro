@@ -15,28 +15,45 @@ const DEMO_HOST = 'demo.robium.org';
         <div class="bar">
           <div>
             <span class="badge">Live demo</span>
-            <h1 class="small">Drive a robot. <span class="gradient-text">Right here.</span></h1>
+            <h1 class="small">Drive a robot. <span class="gradient-text">For real.</span></h1>
           </div>
           <div class="controls">
-            <span id="pill" class="pill">starting…</span>
-            <button id="restart" class="btn btn-secondary">Restart</button>
-            <button id="stop" class="btn btn-secondary">End session</button>
+            <span id="pill" class="pill">idle</span>
+            <button id="start" class="btn btn-primary">Start instance</button>
+            <button id="stop" class="btn btn-secondary" disabled>Stop instance</button>
+            <a id="viewer" class="btn btn-secondary disabled" target="_blank" rel="noopener">Open in Foxglove →</a>
           </div>
         </div>
         <p class="lede">
-          A TurtleBot 3 boots privately for you (ROS 2 Jazzy + Nav2 + Gazebo,
-          headless on Cloud Run). When the map appears, pick the
-          <em>Publish</em> tool in the 3D panel and click anywhere on the map —
-          the robot plans a path and drives there. First boot takes 30–90 s.
+          <strong>Start instance</strong> boots a private simulator just for you
+          (ROS 2 Jazzy + Nav2 + Gazebo, headless on Cloud Run — watch it happen
+          in the terminal below). When it's ready, open it in Foxglove and click
+          navigation goals on the map. Closing this tab stops your instance.
+          <span id="fleet" class="fleet">robot budget: 5 concurrent instances</span>
         </p>
-        <iframe id="viewer" title="Robot viewer" allow="fullscreen"></iframe>
         <div class="term card">
           <div class="term-head">
-            <span id="stat" class="statline">connecting to your robot…</span>
+            <span id="stat" class="statline">no instance running — press Start</span>
           </div>
-          <pre id="log" class="term-log">→ requesting a private simulator instance
-→ first boot can take 30–90 s (container pull + Gazebo + Nav2)…</pre>
+          <pre id="log" class="term-log">robium demo control — nav-trial
+
+  Start instance   boots your private robot (30–90 s; unlucky boots
+                   self-restart once — the terminal narrates)
+  Open in Foxglove opens app.foxglove.dev in a new tab, pre-connected
+                   to your instance (free Foxglove login required;
+                   first time: import the layout file linked below)
+  Stop instance    shuts your simulator down (also happens when you
+                   close this tab, or after 30 minutes)
+</pre>
         </div>
+        <p class="hint">
+          One-time Foxglove setup: download
+          <a href="/demos/nav-trial-layout.json" download>nav-trial-layout.json</a>
+          and import it in Foxglove (Layout menu → Import from file…) — it
+          preconfigures the map, laser scan, path panels and the goal-publish
+          tool. After that, driving is: pick the <em>Publish</em> tool in the
+          3D panel and click the map.
+        </p>
       </div>
     </section>
 
@@ -71,86 +88,129 @@ smoke test passes; skills visibly drove the stack decisions
   <script define:vars={{ DEMO_HOST }}>
     const wsBase = `wss://${DEMO_HOST}`;
     const httpBase = `https://${DEMO_HOST}`;
-    let session, timer;
+    let session = null;
+    let timer = null;
     const $ = (id) => document.getElementById(id);
+    const term = (line) => {
+      $('log').textContent += `\n${line}`;
+      $('log').scrollTop = $('log').scrollHeight;
+    };
 
-    async function boot() {
-      session = crypto.randomUUID();
-      // Kiosk semantics: wipe the viewer's stored layouts (same-origin
-      // IndexedDB) so every session starts from the baked nav-trial layout —
-      // a previously persisted layout would otherwise shadow it (the
-      // LICHTBLICK_SUITE_DEFAULT_LAYOUT hook only applies when none exist).
-      try {
-        await new Promise((res) => {
-          const req = indexedDB.deleteDatabase('lichtblick-layouts');
-          req.onsuccess = req.onerror = req.onblocked = res;
-        });
-      } catch {}
+    function foxgloveUrl() {
       const ds = encodeURIComponent(`${wsBase}/?session=${session}`);
-      $('viewer').src = `/viewer/?ds=foxglove-websocket&ds.url=${ds}`;
+      return `https://app.foxglove.dev/~/view?ds=foxglove-websocket&ds.url=${ds}`;
+    }
+
+    async function start() {
+      session = crypto.randomUUID();
+      $('start').disabled = true;
+      $('stop').disabled = false;
       $('pill').textContent = 'starting…';
-      $('log').textContent = '→ requesting a private simulator instance\n→ first boot can take 30–90 s (container pull + Gazebo + Nav2)…';
+      $('log').textContent = `→ requesting a private simulator instance (session ${session.slice(0, 8)}…)`;
+      term('→ first boot can take 30–90 s: container pull, Gazebo, Nav2 bringup');
+      try {
+        const r = await fetch(`${httpBase}/start?session=${session}`, { method: 'POST', credentials: 'include' });
+        if (r.status === 503) {
+          term('✗ all demo robots are busy right now — try again in a few minutes');
+          reset('busy');
+          return;
+        }
+        term('→ instance allocated, booting the stack…');
+      } catch {
+        term('→ waking the service (cold start) — hang tight…');
+      }
       clearInterval(timer);
       timer = setInterval(poll, 2000);
     }
 
+    let lastLogLen = 0;
     async function poll() {
+      if (!session) return;
       try {
         const r = await fetch(`${httpBase}/status?session=${session}`, { credentials: 'include' });
-        if (r.status === 409) {
-          $('stat').textContent = 'status routed to another instance — your viewer is unaffected';
+        if (r.status === 409) { $('stat').textContent = 'status routed to a busy instance — retrying…'; return; }
+        const s = await r.json();
+        if (!s.claimed) {
+          // watchdog restarted the instance (or a fresh one answered): re-claim
+          await fetch(`${httpBase}/start?session=${session}`, { method: 'POST', credentials: 'include' }).catch(() => {});
           return;
         }
-        const s = await r.json();
         $('pill').textContent = s.ready ? `ready · rtf ${s.rtf}` : 'booting…';
         const mm = String(Math.floor(s.remaining_s / 60)).padStart(2, '0');
         const ss = String(s.remaining_s % 60).padStart(2, '0');
         $('stat').textContent = `uptime ${s.uptime_s}s · ${s.nodes} nodes · session ends in ${mm}:${ss}`;
-        if (s.log?.length) {
+        if (s.fleet && s.fleet.running != null) {
+          $('fleet').textContent = `robots running: ${s.fleet.running} of ${s.fleet.budget} budget`;
+        }
+        if (s.log?.length && s.log.length !== lastLogLen) {
+          lastLogLen = s.log.length;
           $('log').textContent = s.log.join('\n');
           $('log').scrollTop = $('log').scrollHeight;
+        }
+        if (s.ready && $('viewer').classList.contains('disabled')) {
+          $('viewer').classList.remove('disabled');
+          $('viewer').href = foxgloveUrl();
+          term('');
+          term('✓ simulator verified running — "Open in Foxglove" is live');
         }
       } catch {
         $('pill').textContent = 'starting…';
       }
     }
 
-    async function stop() {
+    async function stop(viaButton = true) {
       clearInterval(timer);
-      try {
-        await fetch(`${httpBase}/shutdown?session=${session}`, { method: 'POST', credentials: 'include' });
-      } catch {}
-      $('pill').textContent = 'ended';
-      $('stat').textContent = 'session ended — instance stopped';
-      $('log').textContent += '\n→ instance stopped. Restart for a fresh robot.';
-      $('viewer').src = 'about:blank';
+      timer = null;
+      if (session) {
+        try {
+          await fetch(`${httpBase}/shutdown?session=${session}`, { method: 'POST', credentials: 'include' });
+        } catch {}
+      }
+      if (viaButton) term('→ instance stopped. Start again for a fresh robot.');
+      reset('ended');
     }
 
-    $('stop').addEventListener('click', stop);
-    $('restart').addEventListener('click', boot);
+    function reset(pillText) {
+      session = null;
+      lastLogLen = 0;
+      clearInterval(timer);
+      $('pill').textContent = pillText;
+      $('stat').textContent = 'no instance running — press Start';
+      $('start').disabled = false;
+      $('stop').disabled = true;
+      $('viewer').classList.add('disabled');
+      $('viewer').removeAttribute('href');
+    }
+
+    $('start').addEventListener('click', start);
+    $('stop').addEventListener('click', () => stop(true));
     addEventListener('pagehide', () => {
-      navigator.sendBeacon(`${httpBase}/shutdown?session=${session}`);
+      if (session) navigator.sendBeacon(`${httpBase}/shutdown?session=${session}`);
     });
-    boot();
   </script>
 </Base>
 
 <style>
-  .wide { max-width: 1280px; }
+  .wide { max-width: 1100px; }
   .narrow { max-width: 760px; }
   .demo-top { padding: 40px 0 80px; }
   .bar { display: flex; justify-content: space-between; align-items: end; flex-wrap: wrap; gap: 16px; margin-bottom: 12px; }
   h1.small { font-size: 40px; margin-top: 12px; }
   .badge { display: inline-block; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--border); background: var(--bg2); font-size: 13px; color: var(--text2); }
   .lede { color: var(--text2); font-size: 15px; margin-bottom: 20px; max-width: 62em; }
-  .controls { display: flex; gap: 12px; align-items: center; }
+  .fleet { display: block; margin-top: 6px; color: var(--muted); font-family: ui-monospace, Menlo, monospace; font-size: 13px; }
+  .controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
   .pill { padding: 6px 14px; border-radius: 999px; border: 1px solid var(--border); background: var(--bg2); font-size: 13px; color: var(--success); font-family: ui-monospace, Menlo, monospace; }
   .controls .btn { height: 38px; padding: 0 16px; font-size: 14px; }
-  iframe { width: 100%; height: 62vh; border: 1px solid var(--border); border-radius: 16px; background: var(--bg2); display: block; }
-  .term { margin-top: 16px; padding: 0; }
+  .btn.disabled { opacity: 0.4; pointer-events: none; }
+  button.btn:disabled { opacity: 0.4; pointer-events: none; }
+  button.btn { border: 1px solid var(--border); cursor: pointer; }
+  .term { padding: 0; }
   .term-head { padding: 10px 16px; border-bottom: 1px solid var(--border); background: var(--bg2); }
   .statline { font-family: ui-monospace, Menlo, monospace; font-size: 13px; color: var(--text2); }
-  .term-log { margin: 0; padding: 14px 16px; height: 22vh; overflow-y: auto; font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; line-height: 1.6; color: var(--text2); }
+  .term-log { margin: 0; padding: 16px 18px; height: 52vh; overflow-y: auto; font-family: ui-monospace, Menlo, monospace; font-size: 13px; line-height: 1.65; color: var(--text2); }
+  .hint { margin-top: 14px; color: var(--muted); font-size: 13.5px; max-width: 62em; }
+  .hint a { color: var(--accent2); }
   .sub { color: var(--text2); margin-top: 20px; }
   .sub a { color: var(--accent2); }
   .repro-sec h2 { margin: 12px 0 8px; }
