@@ -5,16 +5,29 @@ import type { Driver } from './driver.ts';
 const LABEL = 'robium.demo'; // marks our containers
 const SESSION_LABEL = 'robium.session';
 const DEMO_LABEL = 'robium.demoId';
+const DOMAIN_LABEL = 'robium.domain';
 
 export class LocalDockerDriver implements Driver {
   #docker = new Docker();
 
+  // Concurrent sims on the same Docker network must NOT share a ROS_DOMAIN_ID
+  // — same domain = crossing DDS traffic = two /clock publishers = the
+  // "moved backwards in time" flood. Pick the lowest free domain in 1..200.
+  async #freeDomain(): Promise<number> {
+    const running = await this.#docker.listContainers({ filters: { label: [`${LABEL}=1`] } });
+    const used = new Set(running.map((c) => Number(c.Labels[DOMAIN_LABEL])).filter((n) => n > 0));
+    for (let d = 1; d <= 200; d++) if (!used.has(d)) return d;
+    throw new Error('no free ROS domain');
+  }
+
   async start(demo: Demo, session: string): Promise<Instance> {
+    const domain = await this.#freeDomain();
+    const env = { ...(demo.env ?? {}), ROS_DOMAIN_ID: String(domain) };
     const container = await this.#docker.createContainer({
       Image: demo.image,
       Cmd: demo.command,
-      Env: Object.entries(demo.env ?? {}).map(([k, v]) => `${k}=${v}`),
-      Labels: { [LABEL]: '1', [DEMO_LABEL]: demo.id, [SESSION_LABEL]: session },
+      Env: Object.entries(env).map(([k, v]) => `${k}=${v}`),
+      Labels: { [LABEL]: '1', [DEMO_LABEL]: demo.id, [SESSION_LABEL]: session, [DOMAIN_LABEL]: String(domain) },
       ExposedPorts: { [`${demo.gatewayPort}/tcp`]: {} },
       HostConfig: {
         PortBindings: { [`${demo.gatewayPort}/tcp`]: [{ HostPort: '' }] }, // '' = ephemeral host port
