@@ -28,6 +28,7 @@ if [[ -z "$URL" ]]; then
   grep -q "Workspace" <<<"$D" && echo "ok: workspace island" || { echo "FAIL: workspace island"; fail=1; }
   grep -rq "demo.robium.org" dist/demos/nav-trial/ dist/_astro/ 2>/dev/null && echo "ok: demo host wired" || { echo "FAIL: demo host"; fail=1; }
   [[ -f dist/demos/nav-trial-layout.json ]] && echo "ok: demo layout file" || { echo "FAIL: demo layout file"; fail=1; }
+  grep -rq "api/instances" dist/_astro/ 2>/dev/null && echo "ok: orchestrator wired" || { echo "FAIL: orchestrator wired"; fail=1; }
   grep -q "/demos/nav-trial" dist/index.html && echo "ok: homepage demo link" || { echo "FAIL: homepage demo link"; fail=1; }
 fi
 

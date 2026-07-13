@@ -1,28 +1,33 @@
 import { useEffect, useRef, useState } from 'react';
 import { Group, Panel, Separator } from 'react-resizable-panels';
 import type { Status } from '../../lib/demoClient';
-import { start as apiStart, status as apiStatus, shutdown as apiShutdown } from '../../lib/demoClient';
-import { wsShutdownUrl } from '../../lib/demoClient';
+import { start as apiStart, status as apiStatus } from '../../lib/demoClient';
+import { createInstance, deleteInstance, deleteInstanceBeacon } from '../../lib/orchestrator';
 import Controls from './Controls';
 import WorkTabs, { type Tab } from './WorkTabs';
 import FileTree from './FileTree';
 import './demo.css';
 
+// 'orchestrator' = Start asks the orchestrator to spawn a container (real
+// lifecycle). 'direct:<host>' = talk to a hand-started container directly
+// (dev bypass for gateway-only work). ?host= forces direct mode.
+type Mode = 'orchestrator' | string; // string = a direct host like 'localhost:8765'
+
 export default function Workspace({ host: hostProp }: { host: string }) {
-  // Backend selection order: ?host= query param > persisted dev choice > prop.
-  // In dev, a top-bar switcher lets you flip prod ↔ local without editing the
-  // URL; it's hidden on the deployed site so visitors never see it.
-  const [host, setHostState] = useState(() => {
-    if (typeof window === 'undefined') return hostProp;
+  const [mode, setModeState] = useState<Mode>(() => {
+    if (typeof window === 'undefined') return 'orchestrator';
     const q = new URLSearchParams(window.location.search).get('host');
-    return q || localStorage.getItem('demoHost') || hostProp;
+    if (q) return q; // ?host= → direct
+    return localStorage.getItem('demoMode') || 'orchestrator';
   });
+  const [host, setHost] = useState<string>(hostProp); // the sim's address, once known
   const [session, setSession] = useState<string | null>(null);
   const [st, setSt] = useState<Status | null>(null);
   const [file, setFile] = useState<{ path: string; content: string } | null>(null);
   const [tab, setTab] = useState<Tab>('about');
   const timer = useRef<number | null>(null);
   const sessionRef = useRef<string | null>(null);
+  const instanceRef = useRef<string | null>(null); // orchestrator instance id (null in direct mode)
 
   function stopPolling() {
     if (timer.current) { clearInterval(timer.current); timer.current = null; }
@@ -31,19 +36,36 @@ export default function Workspace({ host: hostProp }: { host: string }) {
   async function poll() {
     const s = sessionRef.current;
     if (!s) return;
-    const st = await apiStatus(host, s).catch(() => null);
-    if (!st) return; // 409 or error — keep polling
-    if (!st.claimed) { apiStart(host, s).catch(() => {}); return; } // watchdog restarted → re-claim
-    setSt(st);
+    const status = await apiStatus(host, s).catch(() => null);
+    if (!status) return; // 409 or error — keep polling
+    if (!status.claimed) { apiStart(host, s).catch(() => {}); return; } // (re)claim
+    setSt(status);
   }
 
-  function start() {
+  async function start() {
     const s = crypto.randomUUID();
     sessionRef.current = s;
     setSession(s);
     setSt(null);
     setTab('logs');
-    apiStart(host, s).catch(() => {});
+    let simHost = host;
+    if (mode === 'orchestrator') {
+      try {
+        const inst = await createInstance('nav-trial', s); // spawns the container
+        instanceRef.current = inst.id;
+        simHost = inst.host;
+        setHost(inst.host);
+      } catch (e) {
+        sessionRef.current = null;
+        setSession(null);
+        alert((e as Error).message);
+        return;
+      }
+    } else {
+      simHost = mode; // direct host
+      setHost(mode);
+    }
+    apiStart(simHost, s).catch(() => {}); // claim the sim's gateway
     stopPolling();
     timer.current = window.setInterval(poll, 2000);
     poll();
@@ -51,36 +73,33 @@ export default function Workspace({ host: hostProp }: { host: string }) {
 
   async function stop() {
     stopPolling();
-    const s = sessionRef.current;
-    // Local dev backend is a managed fixture: releasing the session must NOT
-    // kill the container (Start would then have nothing to talk to). The next
-    // Start re-claims the still-running instance via idle takeover. Cloud
-    // instances are disposable — actually shut them down.
-    const local = /^(localhost|127\.|\[::1\])/.test(host);
-    if (s && !local) await apiShutdown(host, s).catch(() => {});
+    const id = instanceRef.current;
+    instanceRef.current = null;
     sessionRef.current = null;
     setSession(null);
     setSt(null);
     setFile(null);
     setTab('about');
+    // Orchestrator owns teardown: deleting the instance removes the container
+    // (real stop, local + cloud). Direct mode leaves the hand-started
+    // container alone (you manage it via docker).
+    if (id) await deleteInstance(id);
   }
 
-  function changeHost(h: string) {
-    if (h === host) return;
-    stop();                              // never leak a session across backends
-    localStorage.setItem('demoHost', h);
-    setHostState(h);
+  function changeMode(m: Mode) {
+    if (m === mode) return;
+    stop();
+    localStorage.setItem('demoMode', m);
+    setModeState(m);
   }
 
   useEffect(() => {
-    // Auto-stop on tab close — but NOT for a local dev backend: a localhost
-    // container is a dev fixture you manage with make/docker, and a refresh
-    // shouldn't nuke it. Cloud instances stay per-session-disposable.
-    const local = /^(localhost|127\.|\[::1\])/.test(host);
-    const onHide = () => { if (sessionRef.current && !local) navigator.sendBeacon(wsShutdownUrl(host, sessionRef.current)); };
+    // Tab close → tear the instance down (orchestrator mode only; direct mode
+    // leaves your managed container running).
+    const onHide = () => { if (instanceRef.current) deleteInstanceBeacon(instanceRef.current); };
     window.addEventListener('pagehide', onHide);
     return () => { window.removeEventListener('pagehide', onHide); stopPolling(); };
-  }, [host]);
+  }, []);
 
   return (
     <div className="ws-root">
@@ -91,9 +110,9 @@ export default function Workspace({ host: hostProp }: { host: string }) {
         {import.meta.env.DEV && (
           <label className="host-switch" title="Dev only — pick the backend">
             backend:
-            <select value={host} onChange={(e) => changeHost(e.target.value)}>
-              <option value={hostProp}>{hostProp} (cloud)</option>
-              <option value="localhost:8765">localhost:8765 (local)</option>
+            <select value={mode} onChange={(e) => changeMode(e.target.value)}>
+              <option value="orchestrator">orchestrator (spawns)</option>
+              <option value="localhost:8765">direct localhost:8765</option>
             </select>
           </label>
         )}
