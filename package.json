@@ -4,7 +4,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "astro dev",
+    "dev": "concurrently -n site,orch -c cyan,magenta \"astro dev\" \"npm --prefix demo-orchestrator run dev\"",
+    "dev:site": "astro dev",
+    "dev:orch": "npm --prefix demo-orchestrator run dev",
     "build": "node scripts/fetch-skills.mjs && astro build",
     "preview": "astro preview"
   },
@@ -20,5 +22,8 @@
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-resizable-panels": "^4.12.2"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.3"
   }
 }

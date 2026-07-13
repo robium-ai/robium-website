@@ -27,14 +27,15 @@ sim container per session (no manual `make demo`), and Stop removes it —
 mirroring how Cloud Run spins instances up/down in prod.
 
 ```bash
-# terminal 1 — the orchestrator (long-lived; owns port 8080, needs Docker up
-# and nav-trial:latest built once via `make build` in apps/nav-trial):
-cd ~/repos/robium.org && make orchestrator
-
-# terminal 2 — frontend:
-npm run dev
-# open: http://localhost:4322/demos/nav-trial   (switcher = "orchestrator (spawns)")
+cd ~/repos/robium.org && npm run dev
+# starts BOTH: the Astro site (:4321) and the orchestrator (:8080), labelled
+# [site]/[orch]; Ctrl-C stops both. (Needs Docker up + nav-trial:latest built
+# once via `make build` in apps/nav-trial.)
+# open: http://localhost:4321/demos/nav-trial   (switcher = "orchestrator (spawns)")
 ```
+
+Run just one side if needed: `npm run dev:site` or `npm run dev:orch`
+(`make orchestrator` also still starts the orchestrator alone).
 
 Start → a fresh container is created on an ephemeral port; Stop → it's
 removed; Start again → a new one. The orchestrator enforces the per-demo
