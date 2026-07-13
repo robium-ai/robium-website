@@ -25,8 +25,9 @@ check "Hugging Face" "marquee"
 
 if [[ -z "$URL" ]]; then
   DEMO=$(cat dist/demos/nav-trial/index.html)
-  grep -q "app.foxglove.dev" <<<"$DEMO" && echo "ok: demo deep link" || { echo "FAIL: demo deep link"; fail=1; }
-  grep -q "demo-nav-trial-902570464351" <<<"$DEMO" && echo "ok: demo wss url" || { echo "FAIL: demo wss url"; fail=1; }
+  grep -q "ds=foxglove-websocket" <<<"$DEMO" && echo "ok: embedded viewer wiring" || { echo "FAIL: embedded viewer wiring"; fail=1; }
+  grep -q "demo-nav-trial-902570464351" <<<"$DEMO" && echo "ok: demo host" || { echo "FAIL: demo host"; fail=1; }
+  grep -q "shutdown" <<<"$DEMO" && echo "ok: session controls" || { echo "FAIL: session controls"; fail=1; }
   [[ -f dist/demos/nav-trial-layout.json ]] && echo "ok: demo layout file" || { echo "FAIL: demo layout file"; fail=1; }
   grep -q "/demos/nav-trial" dist/index.html && echo "ok: homepage demo link" || { echo "FAIL: homepage demo link"; fail=1; }
 fi
@@ -36,6 +37,10 @@ if [[ "$tiles" -ge 20 ]]; then echo "ok: $tiles skill tiles"; else echo "FAIL: o
 
 if [[ -z "$URL" ]]; then
   [[ -f dist/media/pusht-eval.mp4 ]] || { echo "FAIL: media missing from dist"; fail=1; }
+else
+  V=$(curl -fsSL "$URL/viewer/" || true)
+  { grep -qi "lichtblick" <<<"$V" || grep -q "main\." <<<"$V"; } && echo "ok: viewer served" || { echo "FAIL: viewer"; fail=1; }
+  curl -fsSL "$URL/viewer/default-layout.js" | grep -q "LICHTBLICK_SUITE_DEFAULT_LAYOUT" && echo "ok: viewer default layout" || { echo "FAIL: viewer default layout"; fail=1; }
 fi
 
 [[ "$fail" -eq 0 ]] && echo "SMOKE PASS" || { echo "SMOKE FAIL"; exit 1; }
