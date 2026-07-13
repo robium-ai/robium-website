@@ -52,7 +52,12 @@ export default function Workspace({ host: hostProp }: { host: string }) {
   async function stop() {
     stopPolling();
     const s = sessionRef.current;
-    if (s) await apiShutdown(host, s).catch(() => {});
+    // Local dev backend is a managed fixture: releasing the session must NOT
+    // kill the container (Start would then have nothing to talk to). The next
+    // Start re-claims the still-running instance via idle takeover. Cloud
+    // instances are disposable — actually shut them down.
+    const local = /^(localhost|127\.|\[::1\])/.test(host);
+    if (s && !local) await apiShutdown(host, s).catch(() => {});
     sessionRef.current = null;
     setSession(null);
     setSt(null);
