@@ -28,6 +28,7 @@ export default function Workspace({ host: hostProp }: { host: string }) {
   const timer = useRef<number | null>(null);
   const sessionRef = useRef<string | null>(null);
   const instanceRef = useRef<string | null>(null); // orchestrator instance id (null in direct mode)
+  const hostRef = useRef<string>(host); // the sim's address the poll loop must query (avoids stale closure)
 
   function stopPolling() {
     if (timer.current) { clearInterval(timer.current); timer.current = null; }
@@ -35,10 +36,11 @@ export default function Workspace({ host: hostProp }: { host: string }) {
 
   async function poll() {
     const s = sessionRef.current;
+    const h = hostRef.current;
     if (!s) return;
-    const status = await apiStatus(host, s).catch(() => null);
+    const status = await apiStatus(h, s).catch(() => null);
     if (!status) return; // 409 or error — keep polling
-    if (!status.claimed) { apiStart(host, s).catch(() => {}); return; } // (re)claim
+    if (!status.claimed) { apiStart(h, s).catch(() => {}); return; } // (re)claim
     setSt(status);
   }
 
@@ -54,7 +56,6 @@ export default function Workspace({ host: hostProp }: { host: string }) {
         const inst = await createInstance('nav-trial', s); // spawns the container
         instanceRef.current = inst.id;
         simHost = inst.host;
-        setHost(inst.host);
       } catch (e) {
         sessionRef.current = null;
         setSession(null);
@@ -63,8 +64,9 @@ export default function Workspace({ host: hostProp }: { host: string }) {
       }
     } else {
       simHost = mode; // direct host
-      setHost(mode);
     }
+    hostRef.current = simHost; // poll loop + children read the live host
+    setHost(simHost);
     apiStart(simHost, s).catch(() => {}); // claim the sim's gateway
     stopPolling();
     timer.current = window.setInterval(poll, 2000);
