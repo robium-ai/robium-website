@@ -22,7 +22,7 @@ smoke test passes; skills visibly drove the stack decisions`}</pre>
         files, open a terminal, edit a config — it's all live and yours for the
         session.
       </p>
-      <a className="btn" href="/#get-started">Get the plugin →</a>
+      <a className="btn" href="/">Get the plugin →</a>
     </div>
   );
 }
