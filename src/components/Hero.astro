@@ -4,17 +4,16 @@ import Terminal from './Terminal.astro';
 <section class="hero">
   <div class="container hero-grid">
     <div class="hero-copy">
-      <span class="badge">Claude Code plugin</span>
-      <h1>Your AI agent, <span class="gradient-text">robotics-ready</span>.</h1>
+      <h1>The Physical AI expertise <span class="gradient-text">AI agents need</span>.</h1>
       <p class="sub">
-        robium equips Claude Code with battle-tested robotics engineering
-        skills — stack selection, simulation, navigation, learned
-        manipulation — so your agent builds robot applications that pass
-        their smoke tests, not just compile.
+        robium gives AI agents the expertise to architect, build, and validate
+        Physical AI applications across simulation, data, visualization, and
+        robotics integration. Grounded in battle-tested reference applications
+        and continuously evolving skills.
       </p>
       <div class="ctas">
-        <a href="#get-started" class="btn btn-primary">Get Started →</a>
-        <a href="https://github.com/jazarium/robium-docs" class="btn btn-secondary">GitHub</a>
+        <a href="/demos/nav-trial/" class="btn btn-primary">Drive a live robot →</a>
+        <a href="#apps" class="btn btn-secondary">Reference apps</a>
       </div>
     </div>
     <Terminal title="claude — manip-trial">
@@ -36,11 +35,6 @@ tests/test_smoke.py::test_eval_produces_metrics <span class="ts">PASSED</span>
 <style>
   .hero { padding: 100px 0 120px; }
   .hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 64px; align-items: center; }
-  .badge {
-    display: inline-block; padding: 6px 14px; border-radius: 999px;
-    border: 1px solid var(--border); background: var(--bg2);
-    font-size: 13px; color: var(--text2); margin-bottom: 24px;
-  }
   .sub { color: var(--text2); margin: 24px 0 32px; max-width: 34em; }
   .ctas { display: flex; gap: 16px; }
   @media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; } }
