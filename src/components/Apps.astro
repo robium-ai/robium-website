@@ -1,32 +1,38 @@
 <section id="apps">
   <div class="container">
-    <span class="label">Proof, not promises</span>
-    <h2>robium built these robots. Go drive one.</h2>
-    <p class="lead">
-      Real applications, built by the skills with minimal intervention, and
-      green on every run. They are the regression suite, the starter kits, and
-      the proof — all at once. Take one, or build something entirely your own.
-      All of them live in
-      <a href="https://github.com/jazarium/robium-applications">robium-applications</a>.
-    </p>
+    <div class="sec-head">
+      <span class="label">Proof, not promises</span>
+      <h2>Robium built these robots. Go drive one.</h2>
+      <p class="lead">
+        Real applications, built by the skills with minimal intervention, and
+        green on every run. They are the regression suite, the starter kits, and
+        the proof — all at once. Take one, or build something entirely your own.
+        All of them live in
+        <a href="https://github.com/jazarium/robium-applications">robium-applications</a>.
+      </p>
+    </div>
     <div class="apps-grid">
       <div class="card app">
-        <h3>nav-trial</h3>
-        <p class="stack">ROS 2 Jazzy · Nav2 · slam_toolbox · Gazebo Harmonic · Docker (arm64) · Foxglove</p>
-        <p>
-          TurtleBot 3 maps its world with SLAM, then navigates goals on the
-          saved map — fully headless on a MacBook, visualized in the browser.
-        </p>
-        <a href="/demos/nav-trial/" class="btn btn-primary demo-btn">Try the live demo →</a>
+        <div class="app-body">
+          <h3>nav-trial</h3>
+          <p class="stack">ROS 2 Jazzy · Nav2 · slam_toolbox · Gazebo Harmonic · Docker (arm64) · Foxglove</p>
+          <p>
+            TurtleBot 3 maps its world with SLAM, then navigates goals on the
+            saved map — fully headless on a MacBook, visualized in the browser.
+          </p>
+          <a href="/demos/nav-trial/" class="btn btn-primary demo-btn">Try the live demo →</a>
+        </div>
       </div>
-      <div class="card app">
-        <h3>manip-trial</h3>
-        <p class="stack">LeRobot 0.6.0 · ACT policy · gym-pusht · uv · Apple-silicon MPS</p>
-        <p>
-          An imitation-learning policy trains on the PushT dataset and evaluates
-          in sim with metrics — on a GPU-less laptop. Below: a real evaluation
-          rollout.
-        </p>
+      <div class="card app has-media">
+        <div class="app-body">
+          <h3>manip-trial</h3>
+          <p class="stack">LeRobot 0.6.0 · ACT policy · gym-pusht · uv · Apple-silicon MPS</p>
+          <p>
+            An imitation-learning policy trains on the PushT dataset and evaluates
+            in sim with metrics — on a GPU-less laptop. Right: a real evaluation
+            rollout.
+          </p>
+        </div>
         <video src="/media/pusht-eval.mp4" autoplay loop muted playsinline></video>
       </div>
     </div>
@@ -34,17 +40,29 @@
 </section>
 
 <style>
-  h2 { margin: 14px 0 20px; }
-  .lead { color: var(--text2); margin-bottom: 48px; max-width: 46em; text-wrap: pretty; }
+  .sec-head { text-align: center; margin-bottom: 48px; }
+  h2 { margin: 14px auto 20px; text-wrap: balance; }
+  .lead { color: var(--text2); margin: 0 auto; max-width: 46em; text-wrap: pretty; }
   .lead a { color: var(--accent2); }
+
   .apps-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
   .app { min-width: 0; padding: 32px; }
+  .app.has-media {
+    display: grid; grid-template-columns: 1fr auto;
+    gap: 32px; align-items: center;
+  }
+  .app-body { min-width: 0; }
   .app h3 { font-size: 22px; font-family: ui-monospace, Menlo, monospace; }
   .stack { font-size: 13px; color: var(--muted); margin: 6px 0 12px; }
   .app p { font-size: 15px; color: var(--text2); margin-bottom: 16px; max-width: 60em; }
   video {
-    width: 100%; max-width: 360px; border-radius: 12px;
+    width: 280px; max-width: 100%; border-radius: 12px;
     border: 1px solid var(--border); display: block;
   }
-  .demo-btn { margin-top: 16px; }
+  .demo-btn { margin-top: 16px; margin-bottom: 0; }
+
+  @media (max-width: 700px) {
+    .app.has-media { grid-template-columns: 1fr; }
+    video { width: 100%; }
+  }
 </style>

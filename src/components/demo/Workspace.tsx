@@ -118,7 +118,7 @@ export default function Workspace({ host: hostProp }: { host: string }) {
             </select>
           </label>
         )}
-        <a className="home" href="/">← robium.org</a>
+        <a className="home" href="/">← Robium.ai</a>
       </div>
       <Group orientation="horizontal" className="ws-panels">
         <Panel defaultSize={20} minSize={14}>

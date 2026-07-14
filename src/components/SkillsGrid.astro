@@ -51,15 +51,17 @@ const groups = pillars.map((p) => ({
 ---
 <section id="skills">
   <div class="container">
-    <span class="label">Skill catalog</span>
-    <h2>One stop shop for every robotics skill your AI agent is missing.</h2>
-    <p class="lead">
-      AI agents are good at code. Robotics asks for more than code — a sprawling
-      stack, scattered docs, and the hard-won judgment that usually lives only in
-      an engineer's head. robium hands your agent that judgment: hand-crafted,
-      well-tested skills, and an architect that turns a plain-language ask into a
-      real stack decision. Install it into the coding agent you already use.
-    </p>
+    <div class="sec-head">
+      <span class="label">Skill catalog</span>
+      <h2>One stop shop for every robotics skill your AI agent is missing.</h2>
+      <p class="lead">
+        AI agents are good at code. Robotics asks for more than code — a sprawling
+        stack, scattered docs, and the hard-won judgment that usually lives only in
+        an engineer's head. Robium hands your agent that judgment: hand-crafted,
+        well-tested skills, and an architect that turns a plain-language ask into a
+        real stack decision. Install it into the coding agent you already use.
+      </p>
+    </div>
 
     <AgentTabs />
 
@@ -91,8 +93,9 @@ const groups = pillars.map((p) => ({
 </section>
 
 <style>
-  h2 { margin: 14px 0 20px; text-wrap: balance; max-width: 18em; }
-  .lead { color: var(--text2); margin-bottom: 44px; max-width: 46em; text-wrap: pretty; }
+  .sec-head { text-align: center; margin-bottom: 44px; }
+  h2 { margin: 14px auto 20px; text-wrap: balance; max-width: 18em; }
+  .lead { color: var(--text2); margin: 0 auto; max-width: 46em; text-wrap: pretty; }
   .catalog { margin-top: 80px; }
 
   .pillar { margin-bottom: 48px; }
