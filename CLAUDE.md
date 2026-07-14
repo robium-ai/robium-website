@@ -54,8 +54,12 @@ Orchestrator tests: `cd demo-orchestrator && npm test`; full lifecycle:
 
 ## Architecture
 
-- `src/` — Astro 6, Dark/Aurora theme, **zero client-side JS on the landing
-  page**. React islands exist only for the demo workspace (`src/components/demo/`).
+- `src/` — Astro 6, Dark/Aurora theme. The landing page ships **no framework**
+  and only a sliver of vanilla JS (the stat counters' IntersectionObserver in
+  `SkillsGrid.astro`); the old "zero client-side JS" rule was dropped in favour
+  of the scroll-triggered count-up. Keep it that way: plain `<script>` in the
+  component that needs it, never a framework import. React islands exist only
+  for the demo workspace (`src/components/demo/`).
 - `scripts/fetch-skills.mjs` — regenerates the skill catalog at build time from
   `~/repos/robium` (override with `ROBIUM_DIR=`), falling back to the GitHub API,
   then to the committed `src/data/skills.json`. The site never hand-maintains
