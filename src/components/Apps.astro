@@ -4,13 +4,13 @@ import Terminal from './Terminal.astro';
 <section id="apps">
   <div class="container">
     <span class="label">Proof, not promises</span>
-    <h2>Built by the plugin. Gated by smoke tests.</h2>
+    <h2>robium built these robots. Go drive one.</h2>
     <p class="lead">
-      Every reference app in
-      <a href="https://github.com/jazarium/robium-applications">robium-applications</a>
-      is built by the plugin with minimal intervention, and stays green — the
-      apps are the regression suite, and the registry tells the next build what
-      to bootstrap from.
+      Real applications, built by the skills with minimal intervention, and
+      green on every run. They are the regression suite, the starter kits, and
+      the proof — all at once. Take one, or build something entirely your own.
+      All of them live in
+      <a href="https://github.com/jazarium/robium-applications">robium-applications</a>.
     </p>
     <div class="apps-grid">
       <div class="card app">
@@ -38,27 +38,21 @@ AMCL localized, 2 map-frame goals <span class="ts">SUCCEEDED</span>
         <video src="/media/pusht-eval.mp4" autoplay loop muted playsinline></video>
       </div>
     </div>
-    <p class="starter">
-      Use one as your starter — or build something entirely new, catered to what
-      you actually need.
-    </p>
   </div>
 </section>
 
 <style>
-  h2 { margin: 12px 0 8px; }
-  .lead { color: var(--text2); margin-bottom: 48px; max-width: 44em; }
+  h2 { margin: 14px 0 20px; }
+  .lead { color: var(--text2); margin-bottom: 48px; max-width: 46em; text-wrap: pretty; }
   .lead a { color: var(--accent2); }
-  .apps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
-  .app { min-width: 0; }
+  .apps-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
+  .app { min-width: 0; padding: 32px; }
   .app h3 { font-size: 22px; font-family: ui-monospace, Menlo, monospace; }
   .stack { font-size: 13px; color: var(--muted); margin: 6px 0 12px; }
-  .app p { font-size: 15px; color: var(--text2); margin-bottom: 16px; }
-  video { width: 100%; border-radius: 12px; border: 1px solid var(--border); display: block; }
-  .demo-btn { margin-top: 16px; }
-  .starter {
-    margin-top: 40px; text-align: center;
-    color: var(--text2); font-size: 16px;
+  .app p { font-size: 15px; color: var(--text2); margin-bottom: 16px; max-width: 60em; }
+  video {
+    width: 100%; max-width: 620px; border-radius: 12px;
+    border: 1px solid var(--border); display: block;
   }
-  @media (max-width: 900px) { .apps-grid { grid-template-columns: 1fr; } }
+  .demo-btn { margin-top: 16px; }
 </style>
