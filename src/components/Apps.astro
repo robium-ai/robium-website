@@ -8,8 +8,9 @@ import Terminal from './Terminal.astro';
     <p class="lead">
       Every reference app in
       <a href="https://github.com/jazarium/robium-applications">robium-applications</a>
-      is built with the skills and stays green — the apps are the regression
-      suite, and the registry tells the next build what to bootstrap from.
+      is built by the plugin with minimal intervention, and stays green — the
+      apps are the regression suite, and the registry tells the next build what
+      to bootstrap from.
     </p>
     <div class="apps-grid">
       <div class="card app">
@@ -37,6 +38,10 @@ AMCL localized, 2 map-frame goals <span class="ts">SUCCEEDED</span>
         <video src="/media/pusht-eval.mp4" autoplay loop muted playsinline></video>
       </div>
     </div>
+    <p class="starter">
+      Use one as your starter — or build something entirely new, catered to what
+      you actually need.
+    </p>
   </div>
 </section>
 
@@ -50,5 +55,9 @@ AMCL localized, 2 map-frame goals <span class="ts">SUCCEEDED</span>
   .app p { font-size: 15px; color: var(--text2); margin-bottom: 16px; }
   video { width: 100%; border-radius: 12px; border: 1px solid var(--border); display: block; }
   .demo-btn { margin-top: 16px; }
+  .starter {
+    margin-top: 40px; text-align: center;
+    color: var(--text2); font-size: 16px;
+  }
   @media (max-width: 900px) { .apps-grid { grid-template-columns: 1fr; } }
 </style>
