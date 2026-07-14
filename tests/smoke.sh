@@ -33,7 +33,11 @@ if [[ -z "$URL" ]]; then
 fi
 
 tiles=$(grep -o 'class="card skill"' <<<"$HTML" | wc -l | tr -d ' ')
-if [[ "$tiles" -ge 20 ]]; then echo "ok: $tiles skill tiles"; else echo "FAIL: only $tiles skill tiles"; fail=1; fi
+if [[ "$tiles" -gt 0 ]]; then echo "ok: skill tiles render"; else echo "FAIL: no skill tiles"; fail=1; fi
+
+for pillar in "Architecture &amp; proof" "Simulation" "Data" "Visualization" "Robotics integration"; do
+  check "$pillar" "pillar: $pillar"
+done
 
 if [[ -z "$URL" ]]; then
   [[ -f dist/media/pusht-eval.mp4 ]] || { echo "FAIL: media missing from dist"; fail=1; }

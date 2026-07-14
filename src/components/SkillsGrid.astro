@@ -1,39 +1,98 @@
 ---
+import { existsSync } from 'node:fs';
 import skills from '../data/skills.json';
+import pillars from '../data/pillars.json';
+
+const REPO = 'https://github.com/jazarium/robium-docs/tree/main/skills';
+
+// Best-effort brand marks. A skill with no entry (or no SVG on disk) gets the
+// neutral glyph. Only these five SVGs exist today; see docs/BACKLOG.md.
+const LOGOS = {
+  ros2: 'ros.svg',
+  nav2: 'ros.svg',
+  'isaac-sim': 'nvidia.svg',
+  'isaac-lab': 'nvidia.svg',
+  huggingface: 'huggingface.svg',
+  lerobot: 'huggingface.svg',
+  environments: 'docker.svg',
+  integration: 'docker.svg',
+};
+
+const byName = new Map(skills.map((s) => [s.name, s]));
+
+const groups = pillars.map((p) => ({
+  ...p,
+  cards: p.skills
+    .map((name) => byName.get(name))
+    .filter(Boolean)
+    .map((s) => {
+      const file = LOGOS[s.name];
+      return { ...s, logo: file && existsSync(`public/logos/${file}`) ? file : null };
+    }),
+}));
 ---
 <section id="skills">
   <div class="container">
     <span class="label">Skill catalog</span>
-    <h2>{skills.length} skills. One coherent robotics brain.</h2>
+    <h2>Expertise, grouped by what you're building.</h2>
     <p class="lead">
-      Generated from the repo at build time — versioned, battle-tested on real
-      builds, and hardened by a continuous learning loop.
+      Versioned, battle-tested on real builds, and hardened by a continuous
+      learning loop. Every description below is generated from the repo at
+      build time.
     </p>
-    <div class="grid">
-      {skills.map((s) => (
-        <div class="card skill">
-          <div class="head">
-            <span class="name">{s.name}</span>
-            <span class="ver">v{s.version}</span>
-          </div>
-          <p>{s.description}</p>
+
+    {groups.map((g) => (
+      <div class="pillar">
+        <div class="pillar-head">
+          <h3 class="pillar-title">{g.title}</h3>
+          <p class="pillar-blurb">{g.blurb}</p>
         </div>
-      ))}
-    </div>
+        <div class="grid">
+          {g.cards.map((s) => (
+            <a class="card skill" href={`${REPO}/${s.name}`}>
+              <div class="head">
+                {s.logo
+                  ? <img src={`/logos/${s.logo}`} alt="" width="18" height="18" loading="lazy" />
+                  : <span class="glyph" aria-hidden="true"></span>}
+                <span class="name">{s.name}</span>
+                <span class="ver">v{s.version}</span>
+              </div>
+              <p>{s.description}</p>
+            </a>
+          ))}
+        </div>
+      </div>
+    ))}
   </div>
 </section>
 
 <style>
   h2 { margin: 12px 0 8px; }
-  .lead { color: var(--text2); margin-bottom: 48px; max-width: 40em; }
+  .lead { color: var(--text2); margin-bottom: 56px; max-width: 40em; }
+
+  .pillar { margin-bottom: 48px; }
+  .pillar-head { margin-bottom: 16px; }
+  .pillar-title { font-size: 18px; margin: 0 0 4px; }
+  .pillar-blurb { font-size: 14px; color: var(--muted); margin: 0; }
+
   .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-  .skill .head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
-  .name { font-family: ui-monospace, Menlo, monospace; font-weight: 600; font-size: 15px; color: var(--text); }
-  .ver { font-size: 12px; color: var(--muted); font-family: ui-monospace, Menlo, monospace; }
-  .skill p {
-    font-size: 13.5px; color: var(--text2); line-height: 1.55;
-    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+
+  .skill { display: block; text-decoration: none; transition: border-color 150ms; }
+  .skill:hover { border-color: var(--accent); }
+  .skill .head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+  .skill .head img { align-self: center; }
+  .glyph {
+    width: 18px; height: 18px; border-radius: 5px; align-self: center;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    opacity: 0.55;
   }
+  .name {
+    font-family: ui-monospace, Menlo, monospace; font-weight: 600;
+    font-size: 15px; color: var(--text);
+  }
+  .ver { margin-left: auto; font-size: 12px; color: var(--muted); font-family: ui-monospace, Menlo, monospace; }
+  .skill p { font-size: 13.5px; color: var(--text2); line-height: 1.55; margin: 0; }
+
   @media (max-width: 1000px) { .grid { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
 </style>

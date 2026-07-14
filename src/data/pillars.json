@@ -1,0 +1,27 @@
+[
+  {
+    "title": "Architecture & proof",
+    "blurb": "The spine of every build: pick the stack, then prove it runs.",
+    "skills": ["architect", "testing"]
+  },
+  {
+    "title": "Simulation",
+    "blurb": "Test the robot before you own the robot.",
+    "skills": ["simulation", "gazebo", "isaac-sim", "isaac-lab"]
+  },
+  {
+    "title": "Data",
+    "blurb": "Curated datasets and the training loop that consumes them.",
+    "skills": ["data", "lerobot", "huggingface"]
+  },
+  {
+    "title": "Visualization",
+    "blurb": "See what the robot sees — locally, or on a remote server.",
+    "skills": ["visualization", "foxglove", "rerun", "rviz2"]
+  },
+  {
+    "title": "Robotics integration",
+    "blurb": "The middleware, the navigation stack, and reproducible environments.",
+    "skills": ["ros2", "nav2", "integration", "environments"]
+  }
+]
