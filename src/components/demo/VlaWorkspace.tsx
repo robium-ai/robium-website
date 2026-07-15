@@ -29,6 +29,7 @@ export default function VlaWorkspace() {
   const [host, setHost] = useState<string>('');
   const [session, setSession] = useState<string | null>(null);
   const [st, setSt] = useState<Status | null>(null);
+  const [unreachable, setUnreachable] = useState(false);
   const timer = useRef<number | null>(null);
   const sessionRef = useRef<string | null>(null);
   const instanceRef = useRef<string | null>(null);
@@ -46,8 +47,18 @@ export default function VlaWorkspace() {
     const s = sessionRef.current;
     const h = hostRef.current;
     if (!s || !h) return;
-    const status = await apiStatus(h, s).catch(() => null);
-    if (!status) return; // 409 or error — keep polling
+    // apiStatus resolves null on 409 (foreign session) but THROWS on a dead
+    // backend — surface the difference: in direct mode "nothing is listening"
+    // means the user hasn't started `make demo`, and silence reads as broken.
+    let status: Status | null;
+    try {
+      status = await apiStatus(h, s);
+      setUnreachable(false);
+    } catch {
+      setUnreachable(true);
+      return;
+    }
+    if (!status) return; // 409 — keep polling
     if (!status.claimed) { apiStart(h, s).catch(() => {}); return; } // (re)claim
     setSt(status);
   }
@@ -87,6 +98,7 @@ export default function VlaWorkspace() {
     sessionRef.current = null;
     setSession(null);
     setSt(null);
+    setUnreachable(false);
     // Orchestrator owns teardown; direct mode leaves your hand-started
     // process alone (you manage it in the terminal that ran `make demo`).
     if (id) await deleteInstance(id);
@@ -107,7 +119,10 @@ export default function VlaWorkspace() {
 
   const running = !!session;
   const ready = !!st?.ready;
-  const pill = !running ? 'idle' : ready ? 'ready' : (st?.claimed ? 'booting…' : 'starting…');
+  const pill = !running ? 'idle'
+    : unreachable ? 'backend unreachable'
+    : ready ? 'ready'
+    : (st?.claimed ? 'booting…' : 'starting…');
   const mm = st ? String(Math.floor(st.remaining_s / 60)).padStart(2, '0') : '30';
   const ss = st ? String(st.remaining_s % 60).padStart(2, '0') : '00';
 
@@ -170,7 +185,17 @@ export default function VlaWorkspace() {
         <Panel defaultSize={78} minSize={40}>
           <div className="ws-pane">
             <div className="pane-head">Robot</div>
-            {ready && host ? (
+            {running && unreachable ? (
+              <div className="tab-hint">
+                <p>Nothing is answering at <code>{host}</code>.</p>
+                <p>
+                  In direct mode you run the backend yourself: in
+                  robium-applications, <code>cd apps/vla-trial && make demo</code>,
+                  wait for <code>DEMO READY</code> — this pane connects
+                  automatically.
+                </p>
+              </div>
+            ) : ready && host ? (
               <iframe
                 className="robot-frame"
                 src={uiUrl(host)}
