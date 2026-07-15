@@ -5,7 +5,7 @@ export default function About() {
       <p>
         Everything in this workspace — the stack, the map, the running sim —
         was built by Claude Code with the{' '}
-        <a href="https://github.com/jazarium/robium-docs">robium</a> plugin, from
+        <a href="https://github.com/jazarium/robium-plugin">robium</a> plugin, from
         this brief (verbatim from the{' '}
         <a href="https://github.com/jazarium/robium-applications">robium-applications</a>{' '}
         proving ground):

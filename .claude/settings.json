@@ -2,13 +2,13 @@
   "permissions": {
     "additionalDirectories": [
       "../robium-applications",
-      "../robium"
+      "../robium-plugin"
     ],
     "ask": [
-      "Edit(~/repos/robium/skills/**)",
-      "Write(~/repos/robium/skills/**)",
-      "Edit(../robium/skills/**)",
-      "Write(../robium/skills/**)"
+      "Edit(~/repos/robium-plugin/skills/**)",
+      "Write(~/repos/robium-plugin/skills/**)",
+      "Edit(../robium-plugin/skills/**)",
+      "Write(../robium-plugin/skills/**)"
     ]
   }
 }

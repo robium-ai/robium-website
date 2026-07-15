@@ -1,6 +1,6 @@
-# robium.org
+# robium-website
 
-Landing page for the [robium](https://github.com/jazarium/robium-docs) Claude Code
+Landing page (served at **robium.ai**) for the [robium](https://github.com/jazarium/robium-plugin) Claude Code
 plugin. Astro 6 static site, Dark/Aurora theme, zero client-side JS. All
 content is real: the hero terminal is a condensed transcript from an actual
 build, the skill grid is generated from the repo at build time, and the proof
@@ -12,7 +12,7 @@ section shows a real policy-evaluation rollout.
     make dev        # local dev server
     make smoke      # build + content assertions (the done bar)
 
-The skill catalog regenerates on every build from `~/repos/robium` (override
+The skill catalog regenerates on every build from `~/repos/robium-plugin` (override
 with `ROBIUM_DIR=...`), falling back to the GitHub API, then to the committed
 `src/data/skills.json`.
 
@@ -32,12 +32,14 @@ Each deploy:
     make image      # Cloud Build → Artifact Registry
     make deploy     # → Cloud Run service robium-site
 
-Domain (one-time): map robium.org + www in Cloud Run → Domain mappings, then
+Domain (one-time): map robium.ai + www in Cloud Run → Domain mappings, then
 add the printed DNS records at the registrar. TLS is managed automatically.
+robium.ai is canonical; robium.org and robium.dev (+ www) are mapped to the
+same service and 301-redirect to robium.ai in nginx.conf.
 
 ## Launch checklist
 
-- [ ] `jazarium/robium-docs` repo public (install command + CI catalog fetch)
-- [ ] `make smoke` green locally and `tests/smoke.sh https://robium.org` green
+- [ ] `jazarium/robium-plugin` repo public (install command + CI catalog fetch)
+- [ ] `make smoke` green locally and `tests/smoke.sh https://robium.ai` green
 - [ ] Foxglove capture added to the nav-trial card (v1 ships the smoke
       transcript; swap in the image when captured)

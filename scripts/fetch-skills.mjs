@@ -7,7 +7,7 @@ import { join } from 'node:path';
 import { homedir } from 'node:os';
 
 const OUT = 'src/data/skills.json';
-const ROBIUM_DIR = process.env.ROBIUM_DIR ?? join(homedir(), 'repos/robium');
+const ROBIUM_DIR = process.env.ROBIUM_DIR ?? join(homedir(), 'repos/robium-plugin');
 const SKIP = new Set(['_TEMPLATE']);
 
 function parseFrontmatter(text) {
@@ -36,12 +36,12 @@ async function fromLocal() {
 }
 
 async function fromGitHub() {
-  const list = await (await fetch('https://api.github.com/repos/jazarium/robium-docs/contents/skills')).json();
+  const list = await (await fetch('https://api.github.com/repos/jazarium/robium-plugin/contents/skills')).json();
   if (!Array.isArray(list)) return []; // private repo / rate limit → {message: ...}
   const skills = [];
   for (const entry of list) {
     if (entry.type !== 'dir' || SKIP.has(entry.name)) continue;
-    const res = await fetch(`https://raw.githubusercontent.com/jazarium/robium-docs/main/skills/${entry.name}/SKILL.md`);
+    const res = await fetch(`https://raw.githubusercontent.com/jazarium/robium-plugin/main/skills/${entry.name}/SKILL.md`);
     if (!res.ok) continue;
     const parsed = parseFrontmatter(await res.text());
     if (parsed) skills.push(parsed);

@@ -11,6 +11,7 @@ export function buildServer(manager: Manager): FastifyInstance {
   app.addHook('onRequest', async (req, reply) => {
     const origin = req.headers.origin ?? '';
     if (
+      origin === 'https://robium.ai' ||
       origin === 'https://robium.org' ||
       /^http:\/\/localhost:\d+$/.test(origin) ||
       /^http:\/\/127\.0\.0\.1:\d+$/.test(origin)

@@ -6,29 +6,44 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 The public face of the **robium** Claude Code plugin: an Astro 6 static landing
 site plus the **live demo infrastructure** that lets a visitor drive a real
-robot sim in the browser. Two products in one repo — the site (`src/`) and the
-demo stack (`demo-orchestrator/` + the per-demo backends, which live in the
+robot sim in the browser.
+
+## Brand & domain (canonical: robium.ai)
+
+**robium.ai is the canonical domain and the name to advertise everywhere.** We
+own all three of robium.ai, robium.org, and robium.dev — but .org and .dev exist
+only to protect the name and 301-redirect to robium.ai. Never advertise, brand,
+or link to .org/.dev as the primary; always use robium.ai. The site serves
+robium.ai (nginx `default_server`); .org/.dev + all `www.` variants redirect to
+it. The live-demo gateway is same-site at **demo.robium.ai** (it MUST share
+robium.ai's registrable domain, or the `SameSite=Lax` affinity cookie breaks).
+This repo is **robium-website** (GitHub `jazarium/robium-website`, local
+`~/repos/robium-website`), renamed from robium.org; old URLs redirect. The
+domain it serves is robium.ai — repo name and domain are intentionally
+different. Two products in one repo — the site (`src/`) and the demo stack
+(`demo-orchestrator/` + the per-demo backends, which live in the
 `robium-applications` repo).
 
 **The content rule (load-bearing):** everything on the site is real. The hero
 terminal is a condensed transcript from an actual build, the skill grid is
-generated from the robium repo at build time, and the proof section shows a
+generated from the robium-plugin repo at build time, and the proof section shows a
 real policy-evaluation rollout. Never invent a metric, a transcript line, or a
 skill count to fill space — pull it from an actual run or leave it out.
 
 ## Sibling repos — anchor the session in the repo that owns the output
 
-Three repos are worked on together under `~/repos/`: **robium** (the plugin's
-skills), **robium-applications** (apps + the demo *backends*), and **robium.org**
-(this one). `.claude/settings.json` puts the other two on `additionalDirectories`,
+Three repos are worked on together under `~/repos/`: **robium-plugin** (the
+plugin's skills), **robium-applications** (apps + the demo *backends*), and
+**robium-website** (this one; serves robium.ai, renamed from robium.org).
+`.claude/settings.json` puts the other two on `additionalDirectories`,
 so they are readable/writable from here — but **launch Claude in the repo whose
 output you are producing**: the launch directory selects which CLAUDE.md rules load
 and which repo git status tracks.
 
 Anchor here for the site and the orchestrator. Anchor in `robium-applications` for
 anything inside a demo container (`apps/nav-trial/scripts/demo_gateway.py`, its
-compose file, its image). Anchor in `robium` to edit skills — writes to
-`robium/skills/**` from here are gated behind an `ask` rule on purpose.
+compose file, its image). Anchor in `robium-plugin` to edit skills — writes to
+`robium-plugin/skills/**` from here are gated behind an `ask` rule on purpose.
 
 ## Commands
 
@@ -61,7 +76,7 @@ Orchestrator tests: `cd demo-orchestrator && npm test`; full lifecycle:
   component that needs it, never a framework import. React islands exist only
   for the demo workspace (`src/components/demo/`).
 - `scripts/fetch-skills.mjs` — regenerates the skill catalog at build time from
-  `~/repos/robium` (override with `ROBIUM_DIR=`), falling back to the GitHub API,
+  `~/repos/robium-plugin` (override with `ROBIUM_DIR=`), falling back to the GitHub API,
   then to the committed `src/data/skills.json`. The site never hand-maintains
   the skill list.
 - `demo-orchestrator/` — Node/TS + Fastify + dockerode. The **lifecycle** service:
@@ -86,7 +101,7 @@ Cloud Build + deploy is ~8 minutes. Reach for it only to ship, or to test
 cloud-only behavior (egress lockdown, session affinity, cold start). `DEVELOPING.md`
 is the authority here; the three loops in short:
 
-1. **Frontend only** — `npm run dev`, then `?host=demo.robium.org` points the
+1. **Frontend only** — `npm run dev`, then `?host=demo.robium.ai` points the
    workspace at the already-deployed prod gateway. Instant HMR, zero backend work.
 2. **Full local** (recommended) — `npm run dev` runs the orchestrator too, so the
    page's Start really spawns a container and Stop really removes it. Needs Docker

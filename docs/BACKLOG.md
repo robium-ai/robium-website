@@ -1,4 +1,4 @@
-# robium.org backlog
+# robium-website backlog
 
 Deferred-but-tracked items. Newest on top.
 
@@ -10,7 +10,7 @@ Deferred-but-tracked items. Newest on top.
   The local orchestrator + registry + frontend are done and driver-agnostic;
   this is the remaining half.
 - **[ops] Orchestrator hosting** — the local orchestrator runs on the dev
-  machine; the deployed robium.org needs a hosted orchestrator (or the cloud
+  machine; the deployed robium.ai needs a hosted orchestrator (or the cloud
   path bypasses it and talks to a per-demo Cloud Run service). Decide with the
   cloud driver.
 
@@ -21,7 +21,7 @@ Deferred-but-tracked items. Newest on top.
   and `--network=demo-net --vpc-egress=all-traffic` with a deny-all egress
   firewall). What's NOT yet proven is that a shell inside the container
   genuinely cannot reach the internet. Gate: `tests/pty_probe.py
-  demo.robium.org <session> --expect-egress-blocked` must print
+  demo.robium.ai <session> --expect-egress-blocked` must print
   `PTY OK + EGRESS BLOCKED`. Blocked on the gz-discovery boot race making a
   clean ready-state slow to reach for the probe. **Do before publicizing the
   demo widely** — a public interactive shell WITH internet egress is abusable

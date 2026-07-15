@@ -10,13 +10,13 @@ Edit anything under `src/components/demo/` or `src/lib/demoClient.ts` and see
 it live in milliseconds:
 
 ```bash
-cd ~/repos/robium.org
+cd ~/repos/robium.ai
 npm run dev
-# open: http://localhost:4321/demos/nav-trial?host=demo.robium.org
+# open: http://localhost:4321/demos/nav-trial?host=demo.robium.ai
 ```
 
 The `?host=` query param points the whole workspace at a backend of your
-choice. `demo.robium.org` uses the already-deployed prod gateway — zero
+choice. `demo.robium.ai` uses the already-deployed prod gateway — zero
 backend work. (The prod gateway's CORS allows `http://localhost:*`, so
 credentialed fetches from the dev server work.)
 
@@ -27,7 +27,7 @@ sim container per session (no manual `make demo`), and Stop removes it —
 mirroring how Cloud Run spins instances up/down in prod.
 
 ```bash
-cd ~/repos/robium.org && npm run dev
+cd ~/repos/robium.ai && npm run dev
 # starts BOTH: the Astro site (:4321) and the orchestrator (:8080), labelled
 # [site]/[orch]; Ctrl-C stops both. (Needs Docker up + nav-trial:latest built
 # once via `make build` in apps/nav-trial.)
@@ -57,7 +57,7 @@ cd ~/repos/robium-applications/apps/nav-trial
 make demo                     # first run builds the image once (~7 min)
 
 # terminal 2 — frontend:
-cd ~/repos/robium.org
+cd ~/repos/robium.ai
 npm run dev
 # open: http://localhost:4321/demos/nav-trial?host=localhost:8765
 ```
@@ -80,6 +80,6 @@ to iterate on backend + frontend together.
 
 - Backend/gateway change to ship: `make demo-image && make demo-deploy`
   (from `apps/nav-trial`).
-- Frontend change to ship: `make image && make deploy` (from `robium.org`).
+- Frontend change to ship: `make image && make deploy` (from `robium.ai`).
 - Test cloud-only behavior (egress lockdown, affinity, cold start): deploy,
-  then use `?host=demo.robium.org` against the real service.
+  then use `?host=demo.robium.ai` against the real service.
