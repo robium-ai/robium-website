@@ -46,6 +46,8 @@ export const writeFile = (h: string, s: string, path: string, content: string) =
     body: content,
   });
 
+// vla-trial's Robot pane: the in-container Gradio app (instruction + Rerun viewer).
+export const uiUrl = (h: string) => `${HTTP(h)}/ui/`;
 export const ptyUrl = (h: string, s: string) => `${WS(h)}/pty?session=${s}`;
 export const logsUrl = (h: string, s: string) => `${WS(h)}/logs?session=${s}`;
 export const foxgloveUrl = (h: string, s: string) =>

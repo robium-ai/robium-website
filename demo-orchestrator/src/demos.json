@@ -1,5 +1,15 @@
 [
   {
+    "id": "vla-trial",
+    "title": "Language-conditioned VLA arm (SmolVLA + MuJoCo + Rerun)",
+    "image": "vla-trial:latest",
+    "command": ["python", "-m", "vla_trial.demo.gateway"],
+    "gatewayPort": 8765,
+    "readyLog": "DEMO READY",
+    "maxInstances": 1,
+    "sessionSeconds": 1800
+  },
+  {
     "id": "nav-trial",
     "title": "TurtleBot 3 autonomous navigation (ROS 2 + Nav2 + Gazebo)",
     "image": "nav-trial:latest",

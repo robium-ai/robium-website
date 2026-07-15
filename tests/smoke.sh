@@ -30,6 +30,11 @@ if [[ -z "$URL" ]]; then
   [[ -f dist/demos/nav-trial-layout.json ]] && echo "ok: demo layout file" || { echo "FAIL: demo layout file"; fail=1; }
   grep -rq "api/instances" dist/_astro/ 2>/dev/null && echo "ok: orchestrator wired" || { echo "FAIL: orchestrator wired"; fail=1; }
   grep -q "/demos/nav-trial" dist/index.html && echo "ok: homepage demo link" || { echo "FAIL: homepage demo link"; fail=1; }
+  # vla-trial demo page (v1, local-only)
+  D2=$(cat dist/demos/vla-trial/index.html)
+  grep -q "vla-trial live demo" <<<"$D2" && echo "ok: vla-trial demo page" || { echo "FAIL: vla-trial demo page"; fail=1; }
+  grep -rq "VlaWorkspace" dist/demos/vla-trial/ dist/_astro/ 2>/dev/null && echo "ok: vla workspace island" || { echo "FAIL: vla workspace island"; fail=1; }
+  grep -q "/demos/vla-trial" dist/index.html && echo "ok: homepage vla-trial link" || { echo "FAIL: homepage vla-trial link"; fail=1; }
 fi
 
 # The stat counters must show the REAL counts, computed from the data files at

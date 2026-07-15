@@ -112,3 +112,12 @@
   border: 1px solid var(--border, rgba(255,255,255,0.08)); border-radius: 6px;
   font-size: 12px; padding: 2px 4px;
 }
+
+/* vla-trial Robot pane */
+.robot-frame { flex: 1 1 auto; min-height: 0; width: 100%; border: 0; background: #0b0d14; }
+.bootlog {
+  margin-top: 12px; background: var(--bg2, #11131A);
+  border: 1px solid var(--border, rgba(255,255,255,0.08)); border-radius: 10px;
+  padding: 12px; font-size: 12px; color: var(--text2, #9CA3AF);
+  font-family: ui-monospace, Menlo, monospace; white-space: pre-wrap; overflow: auto;
+}
