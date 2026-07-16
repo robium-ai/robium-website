@@ -2,6 +2,24 @@
 
 Deferred-but-tracked items. Newest on top.
 
+## vla-trial demo (shipped local-only 2026-07-15)
+
+- **[feature] Cloud hosting for /demos/vla-trial** — v1 is deliberately
+  local-only (the page shows a "run it locally" notice off-localhost). Needs:
+  the cloud driver below, a registry/deploy for `vla-trial:latest` (5.2 GB,
+  CPU inference ~9 s/forward-pass — decide instance size and whether that UX
+  is acceptable, or wait for the 20k-step checkpoint + GPU story), and
+  liveness-based claims in the gateway (locally /start always takes over and
+  aborts the in-flight run — fine for one visitor, stealable in public; see
+  apps/vla-trial `demo/gateway.py` in robium-applications).
+- **[feature] "Watch it learn" checkpoint switcher** — the third `base`
+  controller and checkpoint comparison land once `make train-full` (~$20-40)
+  produces a checkpoint that actually succeeds; the demo currently states
+  honestly that the trained policy flails.
+- **[ux] Run history in the viewer** — per-run Rerun recording ids fixed the
+  frozen-viewer bug but replace the previous run; a recording picker would
+  let visitors flip between episodes.
+
 ## Demo orchestrator
 
 - **[feature] Cloud driver** — `CloudRunDriver` behind the same `Driver`
