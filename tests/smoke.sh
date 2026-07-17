@@ -35,6 +35,11 @@ if [[ -z "$URL" ]]; then
   grep -q "vla-trial live demo" <<<"$D2" && echo "ok: vla-trial demo page" || { echo "FAIL: vla-trial demo page"; fail=1; }
   grep -rq "VlaWorkspace" dist/demos/vla-trial/ dist/_astro/ 2>/dev/null && echo "ok: vla workspace island" || { echo "FAIL: vla workspace island"; fail=1; }
   grep -q "/demos/vla-trial" dist/index.html && echo "ok: homepage vla-trial link" || { echo "FAIL: homepage vla-trial link"; fail=1; }
+  # manip-trial demo page (v1, local-only)
+  D3=$(cat dist/demos/manip-trial/index.html)
+  grep -q "manip-trial live demo" <<<"$D3" && echo "ok: manip-trial demo page" || { echo "FAIL: manip-trial demo page"; fail=1; }
+  grep -rq "ManipWorkspace" dist/demos/manip-trial/ dist/_astro/ 2>/dev/null && echo "ok: manip workspace island" || { echo "FAIL: manip workspace island"; fail=1; }
+  grep -q "/demos/manip-trial" dist/index.html && echo "ok: homepage manip-trial link" || { echo "FAIL: homepage manip-trial link"; fail=1; }
 fi
 
 # The stat counters must show the REAL counts, computed from the data files at

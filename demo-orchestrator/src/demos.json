@@ -1,5 +1,15 @@
 [
   {
+    "id": "manip-trial",
+    "title": "ACT imitation learning on PushT — a checkpoint ladder (LeRobot + Rerun)",
+    "image": "manip-trial:latest",
+    "command": ["python", "-m", "manip_trial.demo.gateway"],
+    "gatewayPort": 8765,
+    "readyLog": "DEMO READY",
+    "maxInstances": 2,
+    "sessionSeconds": 1800
+  },
+  {
     "id": "vla-trial",
     "title": "Language-conditioned VLA arm (SmolVLA + MuJoCo + Rerun)",
     "image": "vla-trial:latest",
