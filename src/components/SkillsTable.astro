@@ -17,8 +17,20 @@ if (missing.length > 0) {
   );
 }
 
-// The table shows the description's first sentence; the full text lives on GitHub.
-const firstSentence = (text: string) => text.split(/(?<=\.)\s/)[0];
+// The table shows a terse teaser — the description's own lead-in clause before
+// the first colon (most descriptions are "lead-in: details"). A lead-in that is
+// just the tool's name ("NVIDIA Isaac Sim") carries the start of the detail
+// clause instead. Always the skill's real text, only truncated; the full
+// description lives on GitHub.
+const teaser = (text: string) => {
+  const idx = text.indexOf(':');
+  if (idx === -1) return text.split(/(?<=\.)\s/)[0];
+  const head = text.slice(0, idx).trim();
+  if (head.length >= 40) return head;
+  const rest = text.slice(idx + 1).trim().split(/(?<=\.)\s/)[0];
+  const cut = rest.length > 90 ? rest.slice(0, 90).replace(/\s+\S*$/, '') + '…' : rest;
+  return `${head}: ${cut}`;
+};
 const tagsFor = (name: string): string[] => (tagsJson as Record<string, string[]>)[name] ?? [];
 
 // Rows follow pillar order; any skill in no pillar lands in a derived
@@ -32,7 +44,7 @@ const groups = [
 const rows = groups.flatMap((g) =>
   g.names.map((name) => {
     const s = byName.get(name)!;
-    return { name, pillar: g.title, desc: firstSentence(s.description), tags: tagsFor(name) };
+    return { name, pillar: g.title, desc: teaser(s.description), tags: tagsFor(name) };
   })
 );
 ---
