@@ -16,12 +16,16 @@ check() {
   if grep -q "$1" <<<"$HTML"; then echo "ok: $2"; else echo "FAIL: $2"; fail=1; fi
 }
 
-check "The Physical AI skills" "hero headline"
-check "Browse skills catalog" "skills section"
-check "agent-cursor" "agent tabs"
-check "plugin marketplace add robium-ai/robium-plugin" "install command"
+check "The Physical&nbsp;AI skills" "hero headline"
+check "npx robium-ai install" "install command"
+check "build a mobile robot that navigates in sim" "hero transcript"
+check "What's in the plugin" "plugin anatomy section"
+check "robium-architect" "architect agent in anatomy"
+check "Skill catalog" "skills section"
+check "Built with Robium" "demos section"
+check "Frequently asked questions" "FAQ section"
 check "pusht-eval.mp4" "proof video"
-check "Hugging Face" "marquee"
+check "huggingface.co/robium" "Hugging Face link"
 
 if [[ -z "$URL" ]]; then
   D=$(cat dist/demos/nav-trial/index.html)
@@ -42,16 +46,17 @@ if [[ -z "$URL" ]]; then
   grep -q "/demos/manip-trial" dist/index.html && echo "ok: homepage manip-trial link" || { echo "FAIL: homepage manip-trial link"; fail=1; }
 fi
 
-# The stat counters must show the REAL counts, computed from the data files at
-# build time — never a hand-typed number. The final value is server-rendered
-# (JS only animates up to it), so assert the markup carries the true count.
+# The plugin-anatomy counts must be the REAL counts, computed from the data
+# files at build time — never a hand-typed number. Assert the markup carries
+# the true values via data-count.
 sk=$(node -e "console.log(require('./src/data/skills.json').length)")
 ig=$(node -e "console.log(require('./src/data/integrations.json').length)")
-grep -q "data-count=\"$sk\"" <<<"$HTML" && echo "ok: skills counter ($sk, real)" || { echo "FAIL: skills counter != $sk"; fail=1; }
-grep -q "data-count=\"$ig\"" <<<"$HTML" && echo "ok: integrations counter ($ig, real)" || { echo "FAIL: integrations counter != $ig"; fail=1; }
+grep -q "data-count=\"$sk\"" <<<"$HTML" && echo "ok: skills count ($sk, real)" || { echo "FAIL: skills count != $sk"; fail=1; }
+grep -q "data-count=\"$ig\"" <<<"$HTML" && echo "ok: integrations count ($ig, real)" || { echo "FAIL: integrations count != $ig"; fail=1; }
 
-tiles=$(grep -o 'class="card skill"' <<<"$HTML" | wc -l | tr -d ' ')
-if [[ "$tiles" -gt 0 ]]; then echo "ok: skill tiles render"; else echo "FAIL: no skill tiles"; fail=1; fi
+# Every skill in skills.json renders as a catalog table row — none dropped.
+rows=$(grep -o 'class="skill-row"' <<<"$HTML" | wc -l | tr -d ' ')
+if [[ "$rows" -eq "$sk" ]]; then echo "ok: skill rows ($rows = $sk)"; else echo "FAIL: skill rows $rows != $sk"; fail=1; fi
 
 for pillar in "Architecture &amp; proof" "Simulation" "Data" "Visualization" "Robotics integration"; do
   check "$pillar" "pillar: $pillar"

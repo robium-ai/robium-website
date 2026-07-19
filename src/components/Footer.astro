@@ -1,19 +1,24 @@
 <footer class="footer">
   <div class="container footer-inner">
-    <span class="muted">Robium.ai — MIT license</span>
+    <a href="/" class="brand">robium<em>.ai</em></a>
     <nav class="flinks">
       <a href="https://github.com/robium-ai/robium-plugin">GitHub</a>
+      <a href="https://huggingface.co/robium">Hugging Face</a>
       <a href="https://github.com/robium-ai/robium-applications">Sample apps</a>
+      <a href="/demos/nav-trial/">Demos</a>
       <a href="mailto:admin@robium.ai">Contact</a>
     </nav>
+    <span class="fine">Open source · MIT · robium.ai</span>
   </div>
 </footer>
 
 <style>
-  .footer { border-top: 1px solid var(--border); padding: 32px 0; }
-  .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
-  .muted { color: var(--muted); font-size: 14px; }
-  .flinks { display: flex; gap: 24px; }
-  .flinks a { color: var(--text2); font-size: 14px; text-decoration: none; }
-  .flinks a:hover { color: var(--text); }
+  .footer { border-top: 1px solid var(--border); background: var(--tint); padding: 32px 0 44px; }
+  .footer-inner { display: flex; flex-wrap: wrap; gap: 12px 28px; align-items: baseline; }
+  .brand { font: 700 15px var(--mono); letter-spacing: -0.02em; color: var(--ink); text-decoration: none; }
+  .brand em { font-style: normal; color: var(--yellow-ink); }
+  .flinks { display: flex; flex-wrap: wrap; gap: 12px 28px; }
+  .flinks a { color: var(--ink2); font-size: 14px; text-decoration: none; }
+  .flinks a:hover { color: var(--ink); }
+  .fine { color: var(--muted); font-size: 13px; margin-left: auto; }
 </style>

@@ -2,7 +2,7 @@
   {
     "title": "Architecture & proof",
     "blurb": "The spine of every build: pick the stack, then prove it runs.",
-    "skills": ["architect", "testing"]
+    "skills": ["architect", "testing", "test-assets", "live-demo"]
   },
   {
     "title": "Simulation",

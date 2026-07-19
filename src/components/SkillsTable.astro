@@ -1,0 +1,122 @@
+---
+import skills from '../data/skills.json';
+import pillars from '../data/pillars.json';
+import tagsJson from '../data/skill-tags.json';
+
+const REPO = 'https://github.com/robium-ai/robium-plugin/tree/main/skills';
+
+const byName = new Map(skills.map((s) => [s.name, s]));
+
+// pillars.json is hand-maintained; skills.json is generated. A pillar naming a
+// missing skill is always a bug (renamed or removed upstream) — fail the build.
+const missing = pillars.flatMap((p) => p.skills.filter((n) => !byName.has(n)));
+if (missing.length > 0) {
+  throw new Error(
+    `Skill mismatch: ${missing.join(', ')} named in src/data/pillars.json ` +
+    `but missing from src/data/skills.json (generated from robium repo).`
+  );
+}
+
+// The table shows the description's first sentence; the full text lives on GitHub.
+const firstSentence = (text: string) => text.split(/(?<=\.)\s/)[0];
+const tagsFor = (name: string): string[] => (tagsJson as Record<string, string[]>)[name] ?? [];
+
+// Rows follow pillar order; any skill in no pillar lands in a derived
+// "Catalog upkeep" group so new skills never silently vanish from the page.
+const pillared = new Set(pillars.flatMap((p) => p.skills));
+const leftovers = skills.filter((s) => !pillared.has(s.name)).map((s) => s.name);
+const groups = [
+  ...pillars.map((p) => ({ title: p.title, names: p.skills })),
+  ...(leftovers.length ? [{ title: 'Catalog upkeep', names: leftovers }] : []),
+];
+const rows = groups.flatMap((g) =>
+  g.names.map((name) => {
+    const s = byName.get(name)!;
+    return { name, pillar: g.title, desc: firstSentence(s.description), tags: tagsFor(name) };
+  })
+);
+---
+<section id="skills">
+  <div class="container">
+    <div class="sec-head">
+      <h2>Skill catalog</h2>
+      <span class="count">{skills.length} skills · generated from the repo at build time</span>
+    </div>
+    <p class="lead">
+      AI agents are good at code. Robotics asks for more — a sprawling stack,
+      scattered docs, and hard-won judgment. Each skill below is hand-crafted,
+      versioned, and battle-tested by the reference apps. Filter by pillar:
+    </p>
+
+    <div class="filters" role="group" aria-label="Filter skills by pillar">
+      <button class="chip on" type="button" data-pillar="">All</button>
+      {groups.map((g) => (
+        <button class="chip" type="button" data-pillar={g.title}>{g.title}</button>
+      ))}
+    </div>
+
+    <div class="table-scroll"><table>
+      <thead><tr><th>Skill</th><th>What it teaches</th><th>Tools &amp; topics</th></tr></thead>
+      <tbody>
+        {rows.map((r) => (
+          <tr class="skill-row" data-pillar={r.pillar}>
+            <td class="name"><a href={`${REPO}/${r.name}`}>{r.name}</a></td>
+            <td class="desc">{r.desc}</td>
+            <td class="tags">{r.tags.map((t) => <span class="tag">{t}</span>)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<style>
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+  .chip {
+    font-family: inherit; font-size: 12.5px; font-weight: 600;
+    border: 1px solid var(--border2); border-radius: 999px; padding: 5px 14px;
+    background: var(--bg); color: var(--ink2); cursor: pointer;
+    transition: color 150ms, border-color 150ms;
+  }
+  .chip.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .chip:hover:not(.on) { border-color: var(--ink); color: var(--ink); }
+
+  .table-scroll { overflow-x: auto; margin-top: 16px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg); }
+  table { border-collapse: collapse; width: 100%; min-width: 740px; font-size: 14px; }
+  thead th {
+    text-align: left; font: 600 11px var(--mono); letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--tint);
+  }
+  tbody td { padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: baseline; }
+  tbody tr:last-child td, tbody tr.last-visible td { border-bottom: none; }
+  tbody tr:hover td { background: var(--hover-row); }
+  tr[hidden] { display: none; }
+  td.name a {
+    font: 600 13.5px var(--mono); color: var(--ink); text-decoration: none;
+    border-bottom: 1px solid var(--yellow-mid); white-space: nowrap;
+  }
+  td.desc { color: var(--ink2); font-size: 13.5px; line-height: 1.55; min-width: 300px; }
+  td.tags { min-width: 200px; }
+  .tag {
+    display: inline-block; font: 500 11.5px var(--mono); color: var(--ink2);
+    background: var(--panel); border: 1px solid var(--border); border-radius: 999px;
+    padding: 1px 9px; margin: 2px 3px 2px 0; white-space: nowrap;
+  }
+</style>
+
+<script>
+  // Pillar filter: pure show/hide over server-rendered rows. With JS off, the
+  // full table is on screen — the chips only ever narrow it.
+  const chips = [...document.querySelectorAll<HTMLButtonElement>('#skills .chip')];
+  const rows = [...document.querySelectorAll<HTMLTableRowElement>('#skills .skill-row')];
+
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const pillar = chip.dataset.pillar ?? '';
+      chips.forEach((c) => c.classList.toggle('on', c === chip));
+      rows.forEach((r) => { r.hidden = !!pillar && r.dataset.pillar !== pillar; });
+      const visible = rows.filter((r) => !r.hidden);
+      rows.forEach((r) => r.classList.toggle('last-visible', r === visible[visible.length - 1]));
+    });
+  });
+</script>

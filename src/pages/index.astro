@@ -2,19 +2,20 @@
 import Base from '../layouts/Base.astro';
 import Nav from '../components/Nav.astro';
 import Hero from '../components/Hero.astro';
-import SkillsGrid from '../components/SkillsGrid.astro';
+import PluginAnatomy from '../components/PluginAnatomy.astro';
+import SkillsTable from '../components/SkillsTable.astro';
 import Apps from '../components/Apps.astro';
-import Marquee from '../components/Marquee.astro';
+import Faq from '../components/Faq.astro';
 import Footer from '../components/Footer.astro';
 ---
-<Base>
-  <div class="glow-field"></div>
+<Base bodyClass="landing">
   <Nav />
   <main>
     <Hero />
-    <SkillsGrid />
+    <PluginAnatomy />
+    <SkillsTable />
     <Apps />
-    <Marquee />
+    <Faq />
   </main>
   <Footer />
 </Base>

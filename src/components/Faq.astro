@@ -1,0 +1,66 @@
+<section id="faq">
+  <div class="container">
+    <div class="sec-head"><h2>Frequently asked questions</h2></div>
+    <div class="faq-grid">
+      <div class="qa">
+        <h3>Which coding agents does Robium work with?</h3>
+        <p>
+          Claude Code today — <code>npx robium-ai install</code> sets it up in
+          one command. Cursor and Gemini are next: the skills are plain
+          Markdown, and the per-agent manifest is the only missing piece.
+        </p>
+      </div>
+      <div class="qa">
+        <h3>Do I need a robot or a GPU?</h3>
+        <p>
+          No. Every reference app runs in simulation on a laptop — manip-trial
+          trains and evaluates a policy on a GPU-less MacBook, and nav-trial
+          runs Gazebo fully headless in Docker.
+        </p>
+      </div>
+      <div class="qa">
+        <h3>What exactly is a skill?</h3>
+        <p>
+          A hand-crafted, versioned Markdown package of expertise your agent
+          loads when a task calls for it — not just how-to, but judgment: which
+          simulator, which viewer, which data source, and the failure modes
+          docs don't mention.
+        </p>
+      </div>
+      <div class="qa">
+        <h3>How do skills stay correct as the ecosystem moves?</h3>
+        <p>
+          Every skill is versioned, hardened by building the reference apps,
+          and updated when APIs move — LeRobot's churn forced our own 2.0.0
+          bump. A dedicated skill folds each session's learnings back into the
+          catalog.
+        </p>
+      </div>
+      <div class="qa">
+        <h3>Is it free?</h3>
+        <p>
+          Yes — MIT-licensed, everything public at
+          <a href="https://github.com/robium-ai">github.com/robium-ai</a>: the
+          plugin, the reference apps, the CLI, and this site.
+        </p>
+      </div>
+      <div class="qa">
+        <h3>Can I contribute a skill?</h3>
+        <p>
+          Yes, and the contribution unit is deliberately small: one skill. Copy
+          the template, pass the validator, open a PR.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px 48px; margin-top: 32px; }
+  .qa h3 { font-size: 15.5px; font-weight: 700; margin: 0 0 6px; }
+  .qa h3::before { content: 'Q '; font: 700 13px var(--mono); color: var(--yellow-ink); }
+  .qa p { font-size: 14px; color: var(--ink2); margin: 0; }
+  .qa a { color: var(--yellow-ink); }
+  .qa code { font-family: var(--mono); font-size: 13px; }
+  @media (max-width: 860px) { .faq-grid { grid-template-columns: 1fr; } }
+</style>

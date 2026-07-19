@@ -2,17 +2,17 @@
   {
     "name": "architect",
     "description": "Entry-point skill for designing robotics applications with AI agents. Turns requirements (robot type, task, hardware, sim-vs-real, GPU/budget) into a full stack decision — middleware, simulation, data, visualization, training frameworks — plus a scaffold plan and a written architecture brief.",
-    "version": "1.3.1"
+    "version": "1.4.0"
   },
   {
     "name": "data",
     "description": "Data sourcing strategy for robotics and physical-AI: choose between offline datasets (HuggingFace hub, Open X-Embodiment and similar), simulation-generated data, and teleop/real-robot collection; plan storage formats, episode structure, and dataset versioning.",
-    "version": "1.1.0"
+    "version": "1.2.0"
   },
   {
     "name": "environments",
     "description": "Virtual-environment-first setup for robotics projects: decide uv/venv vs Docker, make local and remote-server runs reproduce identically, handle GPU passthrough and headless/display forwarding.",
-    "version": "1.2.0"
+    "version": "1.3.0"
   },
   {
     "name": "foxglove",
@@ -95,9 +95,14 @@
     "version": "1.1.1"
   },
   {
+    "name": "test-assets",
+    "description": "Canonical test assets and fixture sourcing for robotics testing: which worlds, robot models, sample datasets, and recordings to test against for a given robot type; the standard test-assets folder layout with a provenance manifest; pointer vs vendored sourcing modes; fixture and golden policy (tolerance bands, seeded generation).",
+    "version": "1.0.0"
+  },
+  {
     "name": "testing",
     "description": "Test-driven robotics development: smoke tests for launch files, sim-based regression tests, node-level unit tests, policy eval as a test, and CI patterns for robotics repos.",
-    "version": "1.2.0"
+    "version": "1.3.0"
   },
   {
     "name": "visualization",

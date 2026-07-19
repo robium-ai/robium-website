@@ -1,26 +1,52 @@
----
-import AgentTabs from './AgentTabs.astro';
----
 <section class="hero">
-  <div class="container hero-stack">
+  <div class="container hero-grid">
     <div class="hero-copy">
-      <h1>The Physical AI skills <span class="gradient-text">AI agents need</span>.</h1>
+      <h1>The Physical&nbsp;AI skills AI&nbsp;agents&nbsp;need.</h1>
       <p class="sub">
-        Robium gives AI agents the expertise to architect, build, and validate
-        Physical AI applications across simulation, data, visualization, and
-        robotics integration. Grounded in battle-tested reference applications
-        and continuously evolving skills.
+        An open-source skill catalog that gives AI agents the judgment to
+        architect, build, and validate robotics applications — hardened against
+        real reference builds, not vibes.
+      </p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="https://github.com/robium-ai/robium-cli">npx robium-ai install</a>
+        <a class="btn btn-secondary" href="#skills">Browse the catalog</a>
+      </div>
+      <p class="fine">
+        Works with Claude Code today · Cursor and Gemini coming · MIT license ·
+        <a href="https://github.com/robium-ai">github.com/robium-ai</a>
       </p>
     </div>
-    <AgentTabs />
+    <div class="term">
+      <div class="term-bar"><i></i><i></i><i></i><span>terminal</span></div>
+      <pre><span class="cmd">npx robium-ai install</span>
+<span class="cmd">claude</span>
+
+<span class="ask">&gt; build a mobile robot that navigates in sim</span></pre>
+    </div>
   </div>
 </section>
 
 <style>
-  .hero { padding: 88px 0 60px; }
-  .hero-stack { display: grid; gap: 48px; }
-  .hero-copy { text-align: center; max-width: 960px; margin: 0 auto; }
-  .hero-copy h1 { text-wrap: balance; }
-  .sub { color: var(--text2); margin: 24px auto 0; max-width: 44em; text-wrap: pretty; }
-  .hero-stack > :global(.tabs) { width: 100%; min-width: 0; }
+  /* The hero is the one section without the shared top border. */
+  .hero { padding: 80px 0 72px; border-top: none; }
+  .hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 56px; align-items: center; }
+  h1 { margin: 0; text-wrap: balance; }
+  .sub { color: var(--ink2); margin: 18px 0 0; font-size: 16.5px; max-width: 34em; text-wrap: pretty; }
+  .cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; align-items: center; }
+  .fine { margin: 16px 0 0; font-size: 13px; color: var(--muted); }
+  .fine a { color: var(--yellow-ink); }
+
+  .term { border: 1px solid var(--border2); border-radius: 10px; overflow: hidden; background: var(--panel); }
+  .term-bar { display: flex; align-items: center; background: #F1F1F1; border-bottom: 1px solid var(--border); padding: 9px 14px; gap: 8px; }
+  .term-bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--border2); display: inline-block; }
+  .term-bar span { font: 500 12px var(--mono); color: var(--muted); margin-left: 8px; }
+  .term pre { margin: 0; padding: 20px 22px; font: 13.5px/1.85 var(--mono); color: var(--ink2); overflow-x: auto; }
+  .term .cmd { color: var(--ink); }
+  .term .cmd::before { content: '$ '; color: var(--yellow-mid); font-weight: 700; }
+  .term .ask { color: var(--yellow-ink); }
+
+  @media (max-width: 860px) {
+    .hero { padding: 56px 0; }
+    .hero-grid { grid-template-columns: 1fr; gap: 32px; }
+  }
 </style>

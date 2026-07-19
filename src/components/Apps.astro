@@ -1,85 +1,97 @@
-<section id="apps">
+<section id="demos">
   <div class="container">
-    <div class="sec-head">
-      <span class="label">Try live demos</span>
-      <h2>Built with Robium skills</h2>
-      <p class="lead">
-        Real applications, built by the skills with minimal intervention, and
-        green on every run. They are the regression suite, the starter kits, and
-        the proof — all at once. Take one, or build something entirely your own.
-        All of them live in
-        <a href="https://github.com/robium-ai/robium-applications">robium-applications</a>.
-      </p>
-    </div>
-    <div class="apps-grid">
-      <div class="card app">
-        <div class="app-body">
+    <div class="sec-head"><h2>Built with Robium</h2><span class="count">3 reference apps · green on every run</span></div>
+    <p class="lead">
+      Real applications, built by the skills with minimal intervention — the
+      regression suite, the starter kits, and the proof, all at once. Take one,
+      or build something entirely your own. All of them live in
+      <a href="https://github.com/robium-ai/robium-applications">robium-applications</a>.
+    </p>
+
+    <div class="spots">
+      <article class="spot">
+        <div class="spot-body">
+          <span class="spot-kicker">Mobile navigation</span>
           <h3>nav-trial</h3>
+          <p class="claim">A TurtleBot maps its world with SLAM, then navigates it — headless, in your browser.</p>
+          <p>
+            TurtleBot 3 builds a map with slam_toolbox, then Nav2 drives goals on
+            the saved map — fully headless on a MacBook, visualized live through
+            Foxglove.
+          </p>
           <p class="stack">ROS 2 Jazzy · Nav2 · slam_toolbox · Gazebo Harmonic · Docker (arm64) · Foxglove</p>
-          <p>
-            TurtleBot 3 maps its world with SLAM, then navigates goals on the
-            saved map — fully headless on a MacBook, visualized in the browser.
-          </p>
-          <a href="/demos/nav-trial/" class="btn btn-primary demo-btn">Try the live demo →</a>
+          <a href="/demos/nav-trial/" class="go">Try the live demo</a>
         </div>
-      </div>
-      <div class="card app">
-        <div class="app-body">
+      </article>
+
+      <article class="spot">
+        <div class="spot-body">
+          <span class="spot-kicker">Vision-language-action</span>
           <h3>vla-trial</h3>
+          <p class="claim">Type an instruction. A VLA model drives a simulated arm.</p>
+          <p>
+            SmolVLA drives a simulated SO-101 arm from natural language —
+            cameras, joints, and actions on a scrubable Rerun timeline. Ships
+            with the scripted oracle that recorded its training data; the full
+            fine-tune is still in progress and the demo says so honestly. Runs
+            on your machine today; hosted version coming.
+          </p>
           <p class="stack">LeRobot 0.6.0 · SmolVLA 450M · MuJoCo 3.10 · Rerun 0.34 · Gradio 6 · HF Jobs</p>
-          <p>
-            Type an instruction and a vision-language-action model drives a
-            simulated SO-101 arm — cameras, joints, and actions on a scrubable
-            Rerun timeline. Ships with the scripted oracle that recorded its
-            training data; the full fine-tune is still in progress and the demo
-            says so honestly. Runs on your machine today; hosted version coming.
-          </p>
-          <a href="/demos/vla-trial/" class="btn btn-primary demo-btn">Try the live demo (local) →</a>
+          <a href="/demos/vla-trial/" class="go">Try the live demo (local)</a>
         </div>
-      </div>
-      <div class="card app has-media">
-        <div class="app-body">
+      </article>
+
+      <article class="spot has-media">
+        <div class="spot-body">
+          <span class="spot-kicker">Imitation learning</span>
           <h3>manip-trial</h3>
-          <p class="stack">LeRobot 0.6.0 · ACT policy · gym-pusht · uv · Apple-silicon MPS</p>
+          <p class="claim">A policy trains and evaluates with metrics — on a GPU-less laptop.</p>
           <p>
-            An imitation-learning policy trains on the PushT dataset and evaluates
-            in sim with metrics — on a GPU-less laptop. The live demo is a
-            checkpoint ladder: the same policy at 1k/3k/5k/10k steps, runnable
-            side by side. Right: a real evaluation rollout.
+            An ACT policy trains on the PushT dataset and evaluates in sim. The
+            live demo is a checkpoint ladder: the same policy at 1k/3k/5k/10k
+            steps, runnable side by side. Right: a real evaluation rollout.
           </p>
-          <a href="/demos/manip-trial/" class="btn btn-primary demo-btn">Try the live demo (local) →</a>
+          <p class="stack">LeRobot 0.6.0 · ACT policy · gym-pusht · uv · Apple-silicon MPS</p>
+          <a href="/demos/manip-trial/" class="go">Try the live demo (local)</a>
         </div>
-        <video src="/media/pusht-eval.mp4" autoplay loop muted playsinline></video>
-      </div>
+        <div class="spot-media">
+          <video src="/media/pusht-eval.mp4" autoplay loop muted playsinline></video>
+        </div>
+      </article>
     </div>
   </div>
 </section>
 
 <style>
-  .sec-head { text-align: center; margin-bottom: 48px; }
-  h2 { font-size: 56px; line-height: 1.1; margin: 16px auto 20px; text-wrap: balance; }
-  @media (max-width: 700px) { h2 { font-size: 36px; } }
-  .lead { color: var(--text2); margin: 0 auto; max-width: 46em; text-wrap: pretty; }
-  .lead a { color: var(--accent2); }
+  .lead a { color: var(--yellow-ink); }
 
-  .apps-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
-  .app { min-width: 0; padding: 32px; }
-  .app.has-media {
-    display: grid; grid-template-columns: 1fr auto;
-    gap: 32px; align-items: center;
+  .spots { display: flex; flex-direction: column; gap: 24px; margin-top: 36px; }
+  .spot {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 14px;
+    overflow: hidden;
   }
-  .app-body { min-width: 0; }
-  .app h3 { font-size: 22px; font-family: ui-monospace, Menlo, monospace; }
-  .stack { font-size: 13px; color: var(--muted); margin: 6px 0 12px; }
-  .app p { font-size: 15px; color: var(--text2); margin-bottom: 16px; max-width: 60em; }
-  video {
-    width: 280px; max-width: 100%; border-radius: 12px;
-    border: 1px solid var(--border); display: block;
-  }
-  .demo-btn { margin-top: 16px; margin-bottom: 0; }
+  .spot.has-media { display: grid; grid-template-columns: 1.05fr 0.95fr; }
+  .spot-body { padding: 34px 38px; display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
+  .spot-kicker { font: 600 11px var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--yellow-ink); }
+  .spot h3 { font: 700 23px var(--mono); letter-spacing: -0.02em; margin: 0; }
+  .claim { font-size: 17.5px; font-weight: 650; letter-spacing: -0.01em; margin: 0; text-wrap: balance; color: var(--ink); }
+  .spot p { font-size: 14.5px; color: var(--ink2); margin: 0; max-width: 62em; }
+  .stack { font-size: 12.5px; color: var(--muted); }
+  .go { font-weight: 600; font-size: 14.5px; color: var(--ink); text-decoration: none; margin-top: 8px; }
+  .go::after { content: ' →'; color: var(--yellow-ink); }
 
-  @media (max-width: 700px) {
-    .app.has-media { grid-template-columns: 1fr; }
-    video { width: 100%; }
+  .spot-media {
+    background: var(--tint); border-left: 1px solid var(--border);
+    display: grid; place-items: center; padding: 24px; min-height: 250px;
+  }
+  .spot-media video {
+    width: 100%; max-width: 360px; border-radius: 10px;
+    border: 1px solid var(--border2); display: block;
+  }
+
+  @media (max-width: 860px) {
+    .spot.has-media { grid-template-columns: 1fr; }
+    .spot-media { border-left: none; border-top: 1px solid var(--border); min-height: 0; }
+    .spot-body { padding: 26px 24px; }
   }
 </style>

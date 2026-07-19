@@ -1,0 +1,78 @@
+---
+import skills from '../data/skills.json';
+import integrations from '../data/integrations.json';
+
+// Counts come from the real data at build time — never hand-typed. The demo
+// count is the number of live demo pages actually shipped in this site.
+const demoPages = Object.keys(import.meta.glob('../pages/demos/*.astro'));
+const nSkills = skills.length;
+const nIntegrations = integrations.length;
+const nApps = demoPages.length;
+// One subagent ships today: robium-plugin/agents/robium-architect.md
+const integrationNames = integrations.map((i) => i.name).join(', ');
+---
+<section id="plugin">
+  <div class="container">
+    <div class="sec-head"><h2>What's in the plugin</h2><span class="count">robium · MIT</span></div>
+    <p class="lead">
+      One install adds the whole toolchain to your agent: the skills carry the
+      expertise, an architect agent picks the stack, and the reference apps
+      prove the whole thing runs.
+    </p>
+
+    <div class="anatomy">
+      <div class="tree"><pre>
+<span class="d">robium/</span>
+├── <span class="d">skills/</span>            <span class="n" data-count={nSkills}>{nSkills}</span> <span class="c">hand-crafted, versioned</span>
+│   ├── architect      <span class="c">requirements → stack</span>
+│   ├── ros2 · nav2    <span class="c">middleware &amp; navigation</span>
+│   ├── gazebo · isaac <span class="c">simulation</span>
+│   ├── lerobot · data <span class="c">policy training</span>
+│   └── …
+├── <span class="d">agents/</span>
+│   └── robium-architect   <span class="c">the entry point</span>
+├── <span class="d">integrations</span>       <span class="n" data-count={nIntegrations}>{nIntegrations}</span> <span class="c">ROS 2 → Rerun</span>
+└── <span class="d">reference apps</span>     <span class="n" data-count={nApps}>{nApps}</span>  <span class="c">nav · vla · manip</span></pre></div>
+
+      <div class="anatomy-list">
+        <div class="anat"><h3>skills</h3>
+          <p><b>The expertise.</b> Hand-crafted, versioned Markdown packages the
+            agent loads when a task calls for them — how-to plus the judgment
+            docs don't carry.</p></div>
+        <div class="anat"><h3>agents</h3>
+          <p><b>The architect.</b> A subagent that turns a plain-language ask
+            into a real stack decision — which sim, which viewer, which data
+            source — before any skill fires.</p></div>
+        <div class="anat"><h3>integrations</h3>
+          <p><b>The stack you already trust.</b> {integrationNames}.</p></div>
+        <div class="anat"><h3>reference apps</h3>
+          <p><b>The proof.</b> Real builds that double as the regression suite
+            and your starter kits.</p></div>
+        <div class="anat"><h3>cli</h3>
+          <p><b>The on-ramp.</b> <code>npx robium-ai install</code>, a
+            <code>doctor</code> environment preflight, and <code>skills</code>
+            catalog search.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .anatomy { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 48px; margin-top: 36px; align-items: start; }
+  .tree { border: 1px solid var(--border2); border-radius: 10px; background: var(--tint); padding: 10px 26px 22px; overflow-x: auto; }
+  .tree pre { margin: 0; font: 13.5px/2 var(--mono); color: var(--ink2); }
+  .tree .d { color: var(--ink); font-weight: 600; }
+  .tree .n { color: var(--yellow-ink); font-weight: 600; }
+  .tree .c { color: var(--muted); }
+
+  .anatomy-list { display: flex; flex-direction: column; gap: 18px; }
+  .anat { display: grid; grid-template-columns: 130px 1fr; gap: 16px; align-items: baseline; }
+  .anat h3 { font: 600 14px var(--mono); margin: 0; color: var(--ink); }
+  .anat p { font-size: 14px; color: var(--ink2); margin: 0; }
+  .anat p b { color: var(--ink); font-weight: 650; }
+  .anat code { font-family: var(--mono); font-size: 13px; }
+
+  @media (max-width: 860px) {
+    .anatomy { grid-template-columns: 1fr; gap: 28px; }
+  }
+</style>

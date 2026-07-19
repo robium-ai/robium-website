@@ -1,6 +1,6 @@
 ---
 import '../styles/theme.css';
-const { title = 'Robium.ai — Physical AI expertise for AI agents' } = Astro.props;
+const { title = 'Robium.ai — Physical AI expertise for AI agents', bodyClass = '' } = Astro.props;
 ---
 <!doctype html>
 <html lang="en">
@@ -14,7 +14,7 @@ const { title = 'Robium.ai — Physical AI expertise for AI agents' } = Astro.pr
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>{title}</title>
   </head>
-  <body>
+  <body class={bodyClass || undefined}>
     <slot />
   </body>
 </html>
