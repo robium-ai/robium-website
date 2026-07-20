@@ -8,11 +8,11 @@ the fetch date. All trademarks belong to their owners. Consumed via
 
 | File | Brand | Source (fetched from) | Notes |
 |---|---|---|---|
-| ros.svg | ROS 2 | Simple Icons (identified by file format: 24×24 viewBox + `<title>`; added in commit 7b8835e, recolored #9CA3AF) | provenance reconstructed 2026-07-20; also used for RViz2, which has no official mark of its own |
-| nvidia.svg | NVIDIA (Isaac Sim/Lab) | Simple Icons (same identification, same commit) | provenance reconstructed 2026-07-20 |
-| huggingface.svg | Hugging Face | Simple Icons (same identification, same commit) | provenance reconstructed 2026-07-20 |
-| docker.svg | Docker | Simple Icons (same identification, same commit) | provenance reconstructed 2026-07-20 |
-| uv.svg | uv (Astral) | Simple Icons (same identification, same commit) | provenance reconstructed 2026-07-20 |
+| ros.svg | ROS 2 | Simple Icons (`cdn.simpleicons.org/ros/9DB4E4`) | fetched 2026-07-20; custom light tint of the ROS navy (#22314E is invisible on the dark theme); also used for RViz2, which has no official mark of its own |
+| nvidia.svg | NVIDIA (Isaac Sim/Lab) | Simple Icons (`cdn.simpleicons.org/nvidia`) | fetched 2026-07-20; brand color #76B900 |
+| huggingface.svg | Hugging Face | Simple Icons (`cdn.simpleicons.org/huggingface`) | fetched 2026-07-20; brand color #FFD21E |
+| docker.svg | Docker | Simple Icons (`cdn.simpleicons.org/docker`) | fetched 2026-07-20; brand color #2496ED |
+| uv.svg | uv (Astral) | Simple Icons (`cdn.simpleicons.org/uv`) | fetched 2026-07-20; brand color #DE5FE9 |
 | gazebo.svg | Gazebo | gazebosim.org/assets/images/logos/gazebo_horz_neg.svg | fetched 2026-07-20; "neg" = official dark-background variant |
 | nav2.png | Nav2 | docs.nav2.org/_static/nav2_48x48.png | fetched 2026-07-20; official docs icon (70×70 actual) |
 | lerobot.png | LeRobot | github.com/huggingface/lerobot media/readme/lerobot-logo-thumbnail.png | fetched 2026-07-20; downscaled locally to 295×96 (sips) |
