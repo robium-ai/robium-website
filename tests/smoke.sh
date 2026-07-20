@@ -19,6 +19,8 @@ check() {
 check "The Physical&nbsp;AI skills" "hero headline"
 check "npx robium-ai install" "install command"
 check "build a mobile robot that navigates in sim" "hero transcript"
+check "id=\"catalog\"" "catalog belt section"
+check "Browse all $(node -e "console.log(require('./src/data/skills.json').length)") skills" "catalog belt link to table"
 check "What's in the plugin" "plugin anatomy section"
 check "robium-architect" "architect agent in anatomy"
 check "Skill catalog" "skills section"
@@ -57,6 +59,13 @@ grep -q "data-count=\"$ig\"" <<<"$HTML" && echo "ok: integrations count ($ig, re
 # Every skill in skills.json renders as a catalog table row — none dropped.
 rows=$(grep -o 'class="skill-row"' <<<"$HTML" | wc -l | tr -d ' ')
 if [[ "$rows" -eq "$sk" ]]; then echo "ok: skill rows ($rows = $sk)"; else echo "FAIL: skill rows $rows != $sk"; fail=1; fi
+
+# The catalog belt carries every skill too, once per half — the track is
+# duplicated so the marquee can wrap without a seam, hence 2x. A mismatch means
+# either a skill fell out of the belt or the duplicate half stopped matching.
+belt=$(grep -o 'class="skill-name' <<<"$HTML" | wc -l | tr -d ' ')
+if [[ "$belt" -eq "$((sk * 2))" ]]; then echo "ok: belt skill tiles ($belt = 2 x $sk)";
+else echo "FAIL: belt skill tiles $belt != $((sk * 2))"; fail=1; fi
 
 for pillar in "Architecture &amp; proof" "Simulation" "Data" "Visualization" "Robotics integration"; do
   check "$pillar" "pillar: $pillar"

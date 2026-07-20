@@ -1,0 +1,72 @@
+---
+// The catalog belt: a three-row bento that drifts horizontally under the hero.
+// Content is generated from the data files at build time — the belt never
+// hand-maintains a skill, a count, or a tag.
+import CatalogBeltHalf from './CatalogBeltHalf.astro';
+import { buildColumns } from '../lib/belt';
+import { allSkills, pillarCount } from '../lib/catalog';
+
+const columns = buildColumns();
+---
+<section id="catalog">
+  <div class="container head">
+    <span class="label">The catalog</span>
+    <a href="#skills">Browse all {allSkills.length} skills ↓</a>
+  </div>
+
+  <!-- Full-bleed on purpose: the belt runs edge to edge while the heading above
+       it stays inside the content column. -->
+  <div class="belt">
+    <div class="track">
+      <CatalogBeltHalf columns={columns} />
+      <div aria-hidden="true" class="dup"><CatalogBeltHalf columns={columns} /></div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #catalog {
+    --belt-row: 104px;
+    --belt-col: 244px;
+    padding: 30px 0 34px;
+    background: var(--tint);
+    overflow: hidden;
+  }
+
+  .head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    gap: 12px; flex-wrap: wrap; margin-bottom: 14px;
+  }
+  .head .label {
+    font: 600 12px var(--mono); text-transform: uppercase; letter-spacing: 0.09em;
+    color: var(--ink2);
+  }
+  .head a { font: 500 12.5px var(--mono); color: var(--accent-ink); text-decoration: none; }
+  .head a:hover { text-decoration: underline; }
+
+  .belt {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
+  }
+  .track {
+    display: flex; width: max-content; gap: 12px;
+    animation: belt-drift 260s linear infinite;
+  }
+  .dup { display: contents; }
+
+  /* Half the track is one full pass of the columns; the 6px is half the gap
+     between the two halves, so the wrap lands exactly on a column edge. */
+  @keyframes belt-drift { to { transform: translateX(calc(-50% - 6px)); } }
+
+  .belt:hover .track { animation-play-state: paused; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .track { animation: none; }
+    .belt { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
+  }
+
+  @media (max-width: 800px) {
+    #catalog { --belt-row: 96px; --belt-col: 210px; padding: 22px 0 26px; }
+  }
+</style>

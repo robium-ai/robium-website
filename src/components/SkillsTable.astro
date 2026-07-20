@@ -1,46 +1,10 @@
 ---
-import skills from '../data/skills.json';
-import pillars from '../data/pillars.json';
-import tagsJson from '../data/skill-tags.json';
+// Grouping, ordering and teaser text come from src/lib/catalog.ts so this table
+// and the catalog belt above it can never disagree about the catalog.
+import { allSkills as skills, byName, groups, tagsFor, teaser } from '../lib/catalog';
 
 const REPO = 'https://github.com/robium-ai/robium-plugin/tree/main/skills';
 
-const byName = new Map(skills.map((s) => [s.name, s]));
-
-// pillars.json is hand-maintained; skills.json is generated. A pillar naming a
-// missing skill is always a bug (renamed or removed upstream) — fail the build.
-const missing = pillars.flatMap((p) => p.skills.filter((n) => !byName.has(n)));
-if (missing.length > 0) {
-  throw new Error(
-    `Skill mismatch: ${missing.join(', ')} named in src/data/pillars.json ` +
-    `but missing from src/data/skills.json (generated from robium repo).`
-  );
-}
-
-// The table shows a terse teaser — the description's own lead-in clause before
-// the first colon (most descriptions are "lead-in: details"). A lead-in that is
-// just the tool's name ("NVIDIA Isaac Sim") carries the start of the detail
-// clause instead. Always the skill's real text, only truncated; the full
-// description lives on GitHub.
-const teaser = (text: string) => {
-  const idx = text.indexOf(':');
-  if (idx === -1) return text.split(/(?<=\.)\s/)[0];
-  const head = text.slice(0, idx).trim();
-  if (head.length >= 40) return head;
-  const rest = text.slice(idx + 1).trim().split(/(?<=\.)\s/)[0];
-  const cut = rest.length > 90 ? rest.slice(0, 90).replace(/\s+\S*$/, '') + '…' : rest;
-  return `${head}: ${cut}`;
-};
-const tagsFor = (name: string): string[] => (tagsJson as Record<string, string[]>)[name] ?? [];
-
-// Rows follow pillar order; any skill in no pillar lands in a derived
-// "Catalog upkeep" group so new skills never silently vanish from the page.
-const pillared = new Set(pillars.flatMap((p) => p.skills));
-const leftovers = skills.filter((s) => !pillared.has(s.name)).map((s) => s.name);
-const groups = [
-  ...pillars.map((p) => ({ title: p.title, names: p.skills })),
-  ...(leftovers.length ? [{ title: 'Catalog upkeep', names: leftovers }] : []),
-];
 const rows = groups.flatMap((g) =>
   g.names.map((name) => {
     const s = byName.get(name)!;

@@ -1,0 +1,121 @@
+---
+// One pass of the catalog belt. Rendered twice by CatalogBelt — the second copy
+// is aria-hidden and exists only so the loop can wrap without a visible seam.
+// Tile styles live here because Astro scopes styles per component.
+import type { Column } from '../lib/belt';
+
+interface Props { columns: Column[]; }
+const { columns } = Astro.props;
+
+const REPO = 'https://github.com/robium-ai/robium-plugin/tree/main/skills';
+---
+<div class="belt-half">
+  {columns.map((col) => (
+    <div class="col">
+      {col.tiles.map((t) => (
+        <div class:list={['tile', `s${t.span}`, `k-${t.kind}`]}>
+          {t.kind === 'stat' && (
+            <>
+              <b class="stat-n">{t.value}</b>
+              <span class="stat-cap">{t.caption}</span>
+              <span class="stat-sub">{t.sub}</span>
+            </>
+          )}
+
+          {t.kind === 'cat' && (
+            <>
+              <span class="label">{t.count} skills</span>
+              <h3>{t.title}</h3>
+              <p class="blurb">{t.blurb}</p>
+              <div class="chips">
+                {t.skills.map((s) => (
+                  <a class:list={['chip', { entry: s.entry }]} href={`${REPO}/${s.name}`}>{s.name}</a>
+                ))}
+              </div>
+            </>
+          )}
+
+          {t.kind === 'skill' && (
+            <>
+              <a class="skill-name" href={`${REPO}/${t.name}`}>{t.name}</a>
+              <p class="desc">{t.desc}</p>
+            </>
+          )}
+
+          {t.kind === 'chips' && (
+            <>
+              <span class="label">{t.label}</span>
+              <div class="chips">
+                {t.chips.map((c) => <span class="chip">{c}</span>)}
+              </div>
+            </>
+          )}
+
+          {t.kind === 'agent' && (
+            <>
+              <span class="label">Agent</span>
+              <h3>{t.title}</h3>
+              <p class="blurb">{t.blurb}</p>
+            </>
+          )}
+        </div>
+      ))}
+    </div>
+  ))}
+</div>
+
+<style>
+  .belt-half { display: flex; gap: 12px; }
+
+  /* Fixed row height is what keeps the three rows aligned all the way along the
+     belt; every column's spans sum to 3 (asserted in src/lib/belt.ts). */
+  .col {
+    display: grid; gap: 12px;
+    grid-template-rows: repeat(3, var(--belt-row));
+    width: var(--belt-col); flex: none;
+  }
+  .s1 { grid-row: span 1; }
+  .s2 { grid-row: span 2; }
+  .s3 { grid-row: span 3; }
+
+  .tile {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 12px;
+    padding: 13px 15px; display: grid; align-content: start; gap: 5px;
+    min-width: 0; overflow: hidden;
+  }
+  .k-cat, .k-agent, .k-chips { background: var(--tint); }
+  .k-cat { border-color: var(--border2); }
+
+  .label {
+    font: 600 10px var(--mono); text-transform: uppercase; letter-spacing: 0.09em;
+    color: var(--muted);
+  }
+
+  h3 { font-size: 15.5px; font-weight: 700; letter-spacing: -0.015em; margin: 0; }
+  .blurb { font-size: 12.5px; line-height: 1.45; color: var(--ink2); margin: 0; text-wrap: pretty; }
+
+  .stat-n { font: 700 34px/1 inherit; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+  .stat-cap { font-size: 12.5px; color: var(--ink2); }
+  .stat-sub { font: 500 11px var(--mono); color: var(--muted); margin-top: 4px; }
+
+  .skill-name {
+    font: 600 13px var(--mono); color: var(--ink); text-decoration: none;
+    border-bottom: 1px solid var(--accent); justify-self: start;
+  }
+  .desc {
+    font-size: 11.5px; line-height: 1.42; color: var(--ink2); margin: 0;
+    display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .s1 .desc { -webkit-line-clamp: 2; }
+  .s2 .desc { -webkit-line-clamp: 5; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
+  .chip {
+    font: 500 11px var(--mono); color: var(--ink2); background: var(--panel);
+    border: 1px solid var(--border); border-radius: 6px; padding: 1px 7px;
+    white-space: nowrap; text-decoration: none;
+  }
+  a.chip { color: var(--ink); }
+  a.chip:hover { border-color: var(--ink); }
+  .chip.entry { border-color: var(--accent); color: var(--accent-ink); }
+</style>
