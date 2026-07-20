@@ -7,14 +7,15 @@
 // cards, and the totalling-3 rule is what keeps the rows aligned along the belt.
 
 import integrations from '../data/integrations.json';
-import { byName, compact, groups, pillarCount, tagsFor, teaser, allSkills } from './catalog';
+import { byName, compact, groups, pillarCount, teaser, allSkills } from './catalog';
+import { brandedTags, type Pill } from './brands';
 
 export type Tile =
   | { kind: 'stat'; span: 1 | 2 | 3; value: string; caption: string; sub: string }
   | { kind: 'cat'; span: 3; title: string; blurb: string; count: number;
       skills: { name: string; entry: boolean }[] }
   | { kind: 'skill'; span: 1 | 2; name: string; desc: string }
-  | { kind: 'chips'; span: 1 | 2 | 3; label: string; chips: string[] }
+  | { kind: 'chips'; span: 1 | 2 | 3; label: string; chips: Pill[] }
   | { kind: 'agent'; span: 2; title: string; blurb: string };
 
 export type Column = { tiles: Tile[] };
@@ -35,7 +36,7 @@ const tagTile = (name: string): Tile => ({
   kind: 'chips',
   span: 1,
   label: `${name} · tools`,
-  chips: tagsFor(name),
+  chips: brandedTags(name),
 });
 
 export function buildColumns(): Column[] {
@@ -46,7 +47,7 @@ export function buildColumns(): Column[] {
       { kind: 'stat', span: 2, value: String(allSkills.length),
         caption: 'hand-crafted, versioned skills',
         sub: `${pillarCount} categories · MIT` },
-      { kind: 'chips', span: 1, label: 'Works with', chips: ['Claude Code'] },
+      { kind: 'chips', span: 1, label: 'Works with', chips: [{ text: 'Claude Code', logo: null }] },
     ],
   });
 
@@ -77,14 +78,14 @@ export function buildColumns(): Column[] {
     tiles: [
       { kind: 'agent', span: 2, title: 'robium-architect',
         blurb: 'Turns a plain-language ask into a real stack decision — which sim, which viewer, which data source — before any skill fires.' },
-      { kind: 'chips', span: 1, label: 'Ships as', chips: ['1 subagent'] },
+      { kind: 'chips', span: 1, label: 'Ships as', chips: [{ text: '1 subagent', logo: null }] },
     ],
   });
 
   columns.push({
     tiles: [
       { kind: 'chips', span: 3, label: `Integrations · ${integrations.length}`,
-        chips: integrations.map((i) => i.name) },
+        chips: integrations.map((i) => ({ text: i.name, logo: i.file })) },
     ],
   });
 

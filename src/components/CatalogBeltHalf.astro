@@ -46,7 +46,12 @@ const REPO = 'https://github.com/robium-ai/robium-plugin/tree/main/skills';
             <>
               <span class="label">{t.label}</span>
               <div class="chips">
-                {t.chips.map((c) => <span class="chip">{c}</span>)}
+                {t.chips.map((c) => (
+                  <span class="chip">
+                    {c.logo && <img class="brand" src={`/logos/${c.logo}`} alt="" loading="lazy" height="13" />}
+                    {c.text}
+                  </span>
+                ))}
               </div>
             </>
           )}
@@ -111,10 +116,12 @@ const REPO = 'https://github.com/robium-ai/robium-plugin/tree/main/skills';
 
   .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
   .chip {
+    display: inline-flex; align-items: center; gap: 5px;
     font: 500 11px var(--mono); color: var(--ink2); background: var(--panel);
     border: 1px solid var(--border); border-radius: 6px; padding: 1px 7px;
     white-space: nowrap; text-decoration: none;
   }
+  .chip .brand { height: 13px; width: auto; max-width: 52px; object-fit: contain; }
   a.chip { color: var(--ink); }
   a.chip:hover { border-color: var(--ink); }
   .chip.entry { border-color: var(--accent); color: var(--accent-ink); }
