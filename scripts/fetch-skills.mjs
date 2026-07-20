@@ -36,12 +36,12 @@ async function fromLocal() {
 }
 
 async function fromGitHub() {
-  const list = await (await fetch('https://api.github.com/repos/robium-ai/robium-plugin/contents/skills')).json();
+  const list = await (await fetch('https://api.github.com/repos/robium-ai/robium/contents/skills')).json();
   if (!Array.isArray(list)) return []; // private repo / rate limit → {message: ...}
   const skills = [];
   for (const entry of list) {
     if (entry.type !== 'dir' || SKIP.has(entry.name)) continue;
-    const res = await fetch(`https://raw.githubusercontent.com/robium-ai/robium-plugin/main/skills/${entry.name}/SKILL.md`);
+    const res = await fetch(`https://raw.githubusercontent.com/robium-ai/robium/main/skills/${entry.name}/SKILL.md`);
     if (!res.ok) continue;
     const parsed = parseFrontmatter(await res.text());
     if (parsed) skills.push(parsed);
