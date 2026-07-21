@@ -1,6 +1,9 @@
+---
+import Brand from './Brand.astro';
+---
 <header class="nav">
   <div class="container nav-inner">
-    <a href="/" class="brand">robium<em>.ai</em></a>
+    <Brand size={34} />
     <nav class="links">
       <a href="#plugin">Plugin</a>
       <a href="#skills">Skills</a>
@@ -28,11 +31,6 @@
     border-bottom: 3px solid var(--accent);
   }
   .nav-inner { display: flex; align-items: center; gap: 28px; height: 58px; }
-  .brand {
-    font-family: var(--mono); font-weight: 700; font-size: 17px;
-    letter-spacing: -0.02em; color: var(--ink); text-decoration: none;
-  }
-  .brand em { font-style: normal; color: var(--accent-ink); }
   .links { display: flex; align-items: center; gap: 22px; margin-left: auto; }
   .links a { color: var(--ink2); text-decoration: none; font-size: 14px; transition: color 150ms; }
   .links a:hover { color: var(--ink); }

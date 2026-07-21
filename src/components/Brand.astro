@@ -1,0 +1,27 @@
+---
+// The brand lockup: the robium mark + wordmark, shipped as a designed image.
+// Two files — dark-navy wordmark for light backgrounds, near-white wordmark for
+// dark — swapped by theme; only the active one is painted. data-theme is stamped
+// pre-paint in Base.astro, so there is no wrong-logo flash on load.
+const RATIO = 2294 / 639; // trimmed lockup aspect ratio
+interface Props {
+  /** Rendered logo height in px. Width follows the lockup's aspect ratio. */
+  size?: number;
+  class?: string;
+}
+const { size = 30, class: className = '' } = Astro.props;
+const w = Math.round(size * RATIO);
+---
+<a href="/" class:list={['brand', className]} aria-label="robium — home" style={`--logo-h: ${size}px`}>
+  <img class="lockup light" src="/brand/robium-logo.png" alt="robium" width={w} height={size} />
+  <img class="lockup dark" src="/brand/robium-logo-dark.png" alt="robium" width={w} height={size} />
+</a>
+
+<style>
+  .brand { display: inline-flex; text-decoration: none; }
+  .lockup { height: var(--logo-h); width: auto; display: block; }
+  /* Dark-wordmark lockup on light ground; light-wordmark lockup on dark ground. */
+  .lockup.dark { display: none; }
+  :global(html[data-theme='dark']) .lockup.light { display: none; }
+  :global(html[data-theme='dark']) .lockup.dark { display: block; }
+</style>
