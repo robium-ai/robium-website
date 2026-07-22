@@ -125,12 +125,16 @@ multicast quirk, not a local one.
   hang. Probes must hold the socket.
 - **The demo shell is a public interactive shell.** It is defensible only because
   of two deployed protections: a zero-IAM-role service account (`demo-nav-trial-sa`)
-  and deny-all VPC egress. See `docs/BACKLOG.md` — the egress lockdown is deployed
+  and deny-all VPC egress. See issue #6 — the egress lockdown is deployed
   but **not yet verified end-to-end**. Treat it as "protections deployed, unproven,"
   and do not widen the demo's audience until `PTY OK + EGRESS BLOCKED` passes.
 
 ## Backlog
 
-`docs/BACKLOG.md` is the tracker for deferred work (cloud driver, orchestrator
-hosting, the egress verification, the gz boot race). Keep it current — an item
-that gets deferred goes there rather than into a code comment.
+**GitHub Issues on `robium-ai/robium-website` is the tracker** for deferred work
+(cloud driver, orchestrator hosting, the egress verification, the gz boot race).
+An item that gets deferred becomes an issue — `gh issue create` — rather than a
+code comment or a checked-in TODO list. Label with a kind (`feature`, `ux`,
+`ops`, `security`, `reliability`) and an area (`area:orchestrator`,
+`area:demo-workspace`, `area:vla-trial`). The old `docs/BACKLOG.md` was migrated
+to issues #1–#9 and deleted.
